@@ -1,5 +1,5 @@
 from flask import Flask
-from .config import config
+from .config import Config
 from .extensions import db, migrate, jwt, cors,bcrypt
 
 def create_app(config_name='default'):
@@ -16,13 +16,19 @@ def create_app(config_name='default'):
     bcrypt.init_app(app)
     
     # Registra blueprints
-    from .routes.auth import auth_bp
-    from .routes.users import users_bp
-    from .routes.products import products_bp
+    from .controllers.auth_controller import auth_bp
+    from .controllers.user_controller import user_bp
+    from .controllers.tasklist_controller import tasklist_bp
+    from .controllers.task_controller import task_bp
+    from .controllers.session_controller import session_bp
+
     
     app.register_blueprint(auth_bp, url_prefix='/auth')
-    app.register_blueprint(users_bp, url_prefix='/users')
-    app.register_blueprint(task_list_bp, url_prefix='/task_list')
+    app.register_blueprint(user_bp, url_prefix='/users')
+    app.register_blueprint(tasklist_bp, url_prefix='/task_list')
+    app.register_blueprint(task_bp,url_prefix ='/tasks')
+    app.register_blueprint(session_bp,url_prefix= '/sessions')
+    
     
     # Cria tabelas (em desenvolvimento)
     with app.app_context():

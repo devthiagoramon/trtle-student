@@ -1,4 +1,5 @@
 from .session_service import SessionService
-from .task_list_service import TaskListService
+from .tasklist_service import TaskListService
 from .task_service import TaskService
-from .user_service import UserServices
+from .user_service import UserService
+from .auth_service import AuthService
