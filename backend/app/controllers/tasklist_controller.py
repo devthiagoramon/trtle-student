@@ -1,6 +1,6 @@
 # controllers/tasklist_controller.py
 from flask import Blueprint, request, jsonify
-from backend.app.services.tasklist_service import TaskListService
+from app.services.tasklist_service import TaskListService
 
 tasklist_bp = Blueprint('tasklists', __name__, url_prefix='/tasklists')
 

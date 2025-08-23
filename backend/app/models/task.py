@@ -1,4 +1,8 @@
 from datetime import datetime,timezone
+from .base import BaseModel
+from ..extensions import db
+
+
 class Task(BaseModel):
     __tablename__ = 'tasks'
     

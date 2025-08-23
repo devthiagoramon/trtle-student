@@ -1,3 +1,5 @@
+from .base import BaseModel
+from ..extensions import db
 class TaskList(BaseModel):
     __tablename__ = 'task_lists'
     

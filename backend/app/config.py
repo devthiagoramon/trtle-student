@@ -1,15 +1,29 @@
 import os
 from datetime import timedelta
 import re
+from urllib.parse import quote_plus
+from dotenv import load_dotenv
+
+# Carrega variáveis do .env
+load_dotenv()
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 def get_database_uri():
     uri = os.environ.get('DEV_DATABASE_URL')
-    print(uri)
-    if uri and uri.startswith("postgres://"):
-        # Compatibilidade com URLs do Heroku
-        uri = re.sub(r'^postgres://', 'postgresql://', uri)
+    if uri:
+        print("Database URI (raw):", uri)
+        if uri.startswith("postgres://"):
+            # Compatibilidade com URLs do Heroku
+            uri = re.sub(r'^postgres://', 'postgresql://', uri)
+
+        # Escapa usuário e senha
+        match = re.match(r'postgresql://([^:]+):([^@]+)@(.*)', uri)
+        if match:
+            user, password, rest = match.groups()
+            user_enc = quote_plus(user)
+            password_enc = quote_plus(password)
+            uri = f'postgresql://{user_enc}:{password_enc}@{rest}'
     return uri
 
 class Config:
@@ -32,7 +46,7 @@ class ProductionConfig(Config):
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
-    JWT_SECRET_KEY = 'test-jwt-secret'  # Evita necessidade de variáveis externas
+    JWT_SECRET_KEY = 'test-jwt-secret'
 
 config = {
     'development': DevelopmentConfig,
