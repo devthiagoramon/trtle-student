@@ -1,12 +1,30 @@
-# React + Vite
+# TrtleStudy
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Essa é uma aplicação ReactJS para um sistema de gerenciamento de tarefas.
 
-Currently, two official plugins are available:
+## Funcionalidades:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Cadastro de Usuário
+- Login (Autenticação) via email e senha
+- CRUD de lista de tarefas
+- Timer Pomodoro
+- Dashboard de produtividade (tempo de acesso, sessões, calendário, tarefas realizadas)
 
-## Expanding the ESLint configuration
+## Frontend
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- ReactJS
+- react-router-dom
+- axios
+- @mui/icons-material
+- react-toastify
+- express
+
+## Backend
+
+- Python
+- Flask
+- SQLAlchemy
+
+`cd frontend\trtle-student-web`
+`npm i`
+`npm run dev`
