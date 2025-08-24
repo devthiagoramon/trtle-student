@@ -1,10 +1,16 @@
 import "./App.css";
+import Layout from "./components/Layout";
+import ListGrid from "./components/ListGrid";
+import { ListProvider } from "./context/listContext";
 
 function App() {
   return (
     <>
-      <h1>Tartle Study</h1>
-      <h2>Sua plataforma de organização</h2>
+      <ListProvider>
+        <Layout>
+          <ListGrid />
+        </Layout>
+      </ListProvider>
     </>
   );
 }
