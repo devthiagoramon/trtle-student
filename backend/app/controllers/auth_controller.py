@@ -27,7 +27,7 @@ def register():
 @auth_bp.route("/login", methods=["POST"])
 def login():
     try:
-        data = request.get_json()
+        data = request.get_json()   
         result = AuthService.login(data["email"], data["password"])
         if not result:
             return jsonify({"error": "Credenciais inválidas"}), 401

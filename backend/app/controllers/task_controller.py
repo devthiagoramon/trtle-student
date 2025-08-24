@@ -1,10 +1,13 @@
 # controllers/task_controller.py
 from flask import Blueprint, request, jsonify
 from app.services.task_service import TaskService
+from flask_jwt_extended import jwt_required
+
 
 task_bp = Blueprint('tasks', __name__, url_prefix='/tasks')
 
 @task_bp.route('/', methods=['POST'])
+@jwt_required()
 def create_task():
     data = request.json
     required_fields = ['name', 'list_id', 'status', 'priority']
@@ -27,6 +30,7 @@ def create_task():
     }), 201
 
 @task_bp.route('/<int:task_id>', methods=['GET'])
+@jwt_required()
 def get_task(task_id):
     task = TaskService.get_task(task_id)
     if not task:
@@ -51,6 +55,7 @@ def get_tasks_by_list(list_id):
     } for t in tasks])
 
 @task_bp.route('/<int:task_id>', methods=['PATCH'])
+@jwt_required()
 def update_task(task_id):
     data = request.json
     task = TaskService.update_task(task_id, **data)
@@ -65,6 +70,7 @@ def update_task(task_id):
     })
 
 @task_bp.route('/<int:task_id>', methods=['DELETE'])
+@jwt_required()
 def delete_task(task_id):
     success = TaskService.delete_task(task_id)
     if not success:

@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.services.session_service import SessionService
+from flask_jwt_extended import jwt_required
+
 
 session_bp = Blueprint('sessions', __name__, url_prefix='/sessions')
 
@@ -25,6 +27,7 @@ def create_session():
     }), 201
 
 @session_bp.route('/<int:session_id>', methods=['GET'])
+@jwt_required()
 def get_session(session_id):
     session = SessionService.get_session(session_id)
     if not session:
@@ -39,6 +42,7 @@ def get_session(session_id):
     })
 
 @session_bp.route('/user/<int:user_id>', methods=['GET'])
+@jwt_required()
 def get_sessions_by_user(user_id):
     sessions = SessionService.get_sessions_by_user(user_id)
     return jsonify([{
@@ -51,6 +55,7 @@ def get_sessions_by_user(user_id):
     } for s in sessions])
 
 @session_bp.route('/<int:session_id>', methods=['PATCH'])
+@jwt_required()
 def update_session(session_id):
     data = request.json
     session = SessionService.update_session(session_id, **data)
