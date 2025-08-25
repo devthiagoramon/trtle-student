@@ -2,8 +2,7 @@ import "./App.css";
 import Layout from "./components/Layout";
 import ListGrid from "./components/ListGrid";
 import { ListProvider } from "./context/listContext";
-import Login from "./pages/Login"; // default import
-
+import Login from "./pages/Login";
 import { useState } from "react";
 
 function App() {
@@ -11,17 +10,16 @@ function App() {
 
   return (
     <ListProvider>
-      <Layout>
-        {!isLoggedIn ? (
-          <Login onLogin={() => setIsLoggedIn(true)} />
-        ) : (
+      {!isLoggedIn ? (
+        <Login onLogin={() => setIsLoggedIn(true)} />
+      ) : (
+        <Layout>
           <ListGrid />
-        )}
-      </Layout>
+        </Layout>
+      )}
     </ListProvider>
   );
 }
 
 export default App;
-
 
