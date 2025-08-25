@@ -24,7 +24,7 @@ def create_app(config_name='development'):
 
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(user_bp, url_prefix='/users')
-    app.register_blueprint(tasklist_bp, url_prefix='/task_list')
+    app.register_blueprint(tasklist_bp, url_prefix='/tasklists')
     app.register_blueprint(task_bp, url_prefix='/tasks')
     app.register_blueprint(session_bp, url_prefix='/sessions')
 

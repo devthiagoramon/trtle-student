@@ -4,7 +4,7 @@ from app.services.task_service import TaskService
 from flask_jwt_extended import jwt_required
 
 
-task_bp = Blueprint('tasks', __name__, url_prefix='/tasks')
+task_bp = Blueprint('tasks', __name__, url_prefix=__name__)
 
 @task_bp.route('/', methods=['POST'])
 @jwt_required()

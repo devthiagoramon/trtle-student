@@ -3,16 +3,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from app.services.user_service import UserService
 
-user_bp = Blueprint('users', __name__, url_prefix='/users')
-
-@user_bp.route('/', methods=['POST'])
-def create_user():
-    data = request.json
-    if not data.get("username") or not data.get("email") or not data.get("password"):
-        return jsonify({"error": "Missing fields"}), 400
-    
-    user = UserService.create_user(data['username'], data['email'], data['password'])
-    return jsonify({"id": user.id, "username": user.username, "email": user.email}), 201
+user_bp = Blueprint('users', __name__, url_prefix=__name__)
 
 @user_bp.route('/<int:user_id>', methods=['GET'])
 @jwt_required()

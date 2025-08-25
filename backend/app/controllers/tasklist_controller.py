@@ -1,22 +1,23 @@
 # controllers/tasklist_controller.py
 from flask import Blueprint, request, jsonify
 from app.services.tasklist_service import TaskListService
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required,get_jwt_identity
 
 
-tasklist_bp = Blueprint('tasklists', __name__, url_prefix='/tasklists')
+tasklist_bp = Blueprint('tasklists', __name__, url_prefix=__name__)
 
 @tasklist_bp.route('/', methods=['POST'])
 @jwt_required()
 def create_tasklist():
     data = request.json
-    required_fields = ['title', 'user_id', 'description']
+    required_fields = ['title', 'description']
     if not all(field in data for field in required_fields):
         return jsonify({"error": "Missing required fields"}), 400
-
+    
+    user_id = get_jwt_identity()
     tasklist = TaskListService.create_tasklist(
         title=data['title'],
-        user_id=data['user_id'],
+        user_id=user_id,
         description=data['description']
     )
     return jsonify({
