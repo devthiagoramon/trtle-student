@@ -3,7 +3,7 @@ from app.services.session_service import SessionService
 from flask_jwt_extended import jwt_required
 
 
-session_bp = Blueprint('sessions', __name__, url_prefix='/sessions')
+session_bp = Blueprint('sessions', __name__, url_prefix=__name__)
 
 @session_bp.route('/', methods=['POST'])
 def create_session():
@@ -28,7 +28,7 @@ def create_session():
 
 @session_bp.route('/<int:session_id>', methods=['GET'])
 @jwt_required()
-def get_session(session_id):
+def get_session(session_id): a
     session = SessionService.get_session(session_id)
     if not session:
         return jsonify({"error": "Session not found"}), 404
