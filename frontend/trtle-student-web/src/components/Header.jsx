@@ -8,7 +8,6 @@ const Header = () => {
     name: "Ian Garrido",
     email: "igr.eng23@uea.edu.br",
   });
-  console.log(logedUser.name);
 
   return (
     <header className="header">

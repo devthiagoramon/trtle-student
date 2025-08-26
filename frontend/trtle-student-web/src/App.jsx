@@ -1,16 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import "./App.css";
-import Layout from "./components/Layout";
-import ListGrid from "./components/ListGrid";
-import { ListProvider } from "./context/listContext";
+import AppRoutes from "./routes/AppRoutes";
+import { useEffect } from "react";
+import { ToastContainer } from "react-toastify"; // Importando ToastContainer
 
 function App() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate("/lista_tarefas");
+  }, []);
   return (
     <>
-      <ListProvider>
-        <Layout>
-          <ListGrid />
-        </Layout>
-      </ListProvider>
+      <AppRoutes />
+      <ToastContainer />
     </>
   );
 }
