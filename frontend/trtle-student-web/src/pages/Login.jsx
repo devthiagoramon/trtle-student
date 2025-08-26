@@ -13,13 +13,8 @@ import {
   createTheme,
   ThemeProvider,
 } from "@mui/material";
-import {
-  Visibility,
-  VisibilityOff,
-  Person,
-  Lock,
-} from "@mui/icons-material";
-
+import { Visibility, VisibilityOff, Person, Lock } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
@@ -81,7 +76,13 @@ const Login = ({ onLogin }) => {
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const navigate = useNavigate();
+  
+  const handleToRegister = () =>{
+    console.log("to register");
+    navigate("/cadastro");
+  }
+  
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -91,6 +92,7 @@ const Login = ({ onLogin }) => {
 
     if (foundUser && foundUser.password === passwordInput) {
       toast.success(`Login bem-sucedido! Bem-vindo(a), ${foundUser.user}!`);
+      navigate('/lista_tarefas')
       if (onLogin) onLogin();
     } else {
       toast.error("Nome de utilizador ou palavra-passe inválidos.");
@@ -119,8 +121,7 @@ const Login = ({ onLogin }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background:
-              "linear-gradient(135deg, #4d7656ff 0%, #31683f 100%)",
+            background: "linear-gradient(135deg, #4d7656ff 0%, #31683f 100%)",
             py: 4,
             height: "auto",
             minHeight: "auto",
@@ -155,7 +156,12 @@ const Login = ({ onLogin }) => {
               <Person sx={{ fontSize: 30, color: "#000000" }} />
             </Box>
 
-            <Typography component="h1" variant="h4" gutterBottom color="primary">
+            <Typography
+              component="h1"
+              variant="h4"
+              gutterBottom
+              color="primary"
+            >
               Login
             </Typography>
 
@@ -163,7 +169,11 @@ const Login = ({ onLogin }) => {
               Entre com suas credenciais para acessar o sistema
             </Typography>
 
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: "100%" }}>
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              sx={{ mt: 1, width: "100%" }}
+            >
               <TextField
                 margin="normal"
                 required
@@ -224,15 +234,18 @@ const Login = ({ onLogin }) => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2, py: 1.2 }}
                 size="large"
+                onClick={handleSubmit}
               >
                 Entrar
               </Button>
+            </Box>
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 0, mb: 2, py: 1.2 }}
                 size="large"
+                onClick={handleToRegister}
               >
                 Cadastrar
               </Button>
@@ -245,7 +258,6 @@ const Login = ({ onLogin }) => {
                   rebecca/123 ou jaehyun/456
                 </Typography>
               </Box>
-            </Box>
           </Paper>
         </Container>
       </Box>

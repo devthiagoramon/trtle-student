@@ -63,7 +63,7 @@
       "task_id": "5e",
       "name": "Revisar relatório",
       "description": "Revisar e enviar o relatório final do projeto X.",
-      "status": "em andamento",
+      "status": "feito",
       "deliveryTime": "2025-08-23T17:00:00Z",
       "priority": 1
     }

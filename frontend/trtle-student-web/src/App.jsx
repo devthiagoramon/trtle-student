@@ -1,37 +1,21 @@
-import React, { useState } from "react";
-import { ListProvider } from "./context/listContext";
-import Layout from "./components/Layout";
-import ListGrid from "./components/ListGrid";
-import Login from "./pages/Login";
-import CriarPomodoro from "./pages/CriarPomodoro";
-import PomodoroScreen from "./pages/PomodoroScreen";
+import { useNavigate } from "react-router-dom";
+import "./App.css";
+import AppRoutes from "./routes/AppRoutes";
+import { useEffect } from "react";
+import { ToastContainer } from "react-toastify"; // Importando ToastContainer
+import Login from "./pages/Login"
+import Cadastro from "./pages/Cadastro";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [pomodoroConfig, setPomodoroConfig] = useState(null);
-
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate("/lista_tarefas");
+  }, []);
   return (
-    <ListProvider>
-      {!isLoggedIn ? (
-        <Login onLogin={() => setIsLoggedIn(true)} />
-      ) : (
-        <>
-          {!pomodoroConfig ? (
-            <CriarPomodoro onCreate={(config) => setPomodoroConfig(config)} />
-          ) : (
-            <PomodoroScreen
-              focusTime={pomodoroConfig.focusTime}
-              breakTime={pomodoroConfig.breakTime}
-              sets={pomodoroConfig.sets}
-            />
-          )}
-
-          <Layout>
-            <ListGrid />
-          </Layout>
-        </>
-      )}
-    </ListProvider>
+    <>
+      <Cadastro/>
+      <ToastContainer />
+    </>
   );
 }
 

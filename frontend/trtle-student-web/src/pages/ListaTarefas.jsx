@@ -1,11 +1,22 @@
-// Esta página exibe o título da lista de tarefas
-// Todas as tarefas associadas são listadas com Nome, Descrição, Status e Prazo de entrega
-// As tarefas podem ser reposicionadas conforme a prioridade
+// Esta página exibe todas as listas criadas
+// Ao selecionar uma listas, as primeiras 5 tarefas da listas são exibidas em uma barra lateral
+// O primeiro botão permite a inserção de uma nova lista, abrindo a página ListaTarefas sem nenhuma tarefa definida
+// Se selecionar uma lista já criada, os valores são pré-definidos
 
 import React from "react";
 
+// Componentes
+import Layout from "../components/Layout";
+import ListGrid from "../components/ListGrid";
+
 const ListaTarefas = () => {
-  return <div>ListaTarefas</div>;
+  return (
+    <>
+      <Layout>
+        <ListGrid />
+      </Layout>
+    </>
+  );
 };
 
 export default ListaTarefas;
