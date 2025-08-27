@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 
+
 // Esquema de validação para o nome da tarefa
 const taskNameSchema = yup.object().shape({
   name: yup.string().required("O nome da tarefa é obrigatório."),

@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Button, Modal, Box, TextField, List, ListItem, Typography, IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import api from "../api/api";
 
 const API_URL = "http://localhost:5000/tasks";
 
@@ -33,6 +34,66 @@ const ListaTarefas = () => {
       setTaskError("Erro ao remover tarefa.");
     }
   };
+ const handleEditTask = async (taskId) => {
+  const token = localStorage.getItem("token");
+
+  try {
+    const response = await axios.get(`${API_URL}/${taskId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const task = response.data;
+
+    // Preenche os campos com os dados da tarefa
+    setTaskName(task.name);
+    setTaskDescription(task.description);
+    setTaskPriority(task.priority);
+    setTaskError("");
+    setTaskStatus(task.status)
+
+    // Exibe modal
+    handleOpenTaskModal();
+
+    // Exemplo: exibir o JSON da tarefa no console
+    console.log(JSON.stringify(task, null, 2));
+
+  } catch (err) {
+    setTaskError("Erro ao carregar tarefa.");
+    console.error(err);
+  }
+
+  if (!taskName || !taskPriority) {
+      setTaskError("Preencha todos os campos obrigatórios.");
+      setTaskLoading(false);
+      return;
+    }
+    try {
+      await axios.patch(
+        `${API_URL}/`,
+        {
+          name: taskName,
+          description: taskDescription,
+          priority: taskPriority,
+          status :taskStatus,
+          list_id: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      handleCloseTaskModal();
+      fetchTasks();
+    } catch (err) {
+      setTaskError("Erro ao Atualizar tarefa.");
+    } finally {
+      setTaskLoading(false);
+    }
+};
+
   const { user, handleFetchUser } = useUser();
   const { id } = useParams();
   const { list, updateList } = useLists();
@@ -77,7 +138,19 @@ const ListaTarefas = () => {
     } finally {
       setEditLoading(false);
     }
+    setTimeout (() => {
+      window.location.reload();
+    },300 )
+    
   };
+  const formatDate = (timestamp) => {
+    if (!timestamp) return '';
+    const [dayofWeek,dia,mes,ano,horario,fuso] = timestamp.split(' ');
+    return `${dia} ${mes} ${ano}`
+    
+
+
+};
 
   // --- DETALHE DE LISTA ---
   const [tasks, setTasks] = useState([]);
@@ -87,6 +160,7 @@ const ListaTarefas = () => {
   const [taskPriority, setTaskPriority] = useState(1);
   const [taskError, setTaskError] = useState("");
   const [taskLoading, setTaskLoading] = useState(false);
+  const [taskStatus,setTaskStatus] = useState(1);
 
   useEffect(() => {
     if (!user) handleFetchUser();
@@ -131,6 +205,7 @@ const ListaTarefas = () => {
           name: taskName,
           description: taskDescription,
           priority: taskPriority,
+          status :"pendente",
           list_id: id,
         },
         {
@@ -218,13 +293,17 @@ const ListaTarefas = () => {
               <ListItem key={task.id} sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>{task.name}</Typography>
-                  <Typography variant="body2" sx={{ mt: 0.5 }}>{task.description}</Typography>
+                  <Typography variant="body1" sx={{ mt: 0.5 }}>{task.description}</Typography>
                   <Typography variant="caption" sx={{ mt: 0.5, display: 'block' }}>
+
                     Prioridade: {task.priority} |
                     Status: {task.status ? task.status : "-"} |
-                    Criada em: {task.created_at ? new Date(task.created_at).toLocaleString() : "-"}
+                    Criada em: {task.created_at ? formatDate(task.created_at): console.log(task)}
                   </Typography>
                 </Box>
+                <IconButton edge = "end" aria-label ="edit" onClick={() => handleEditTask(task.id)} sx={{ ml: 2, mt: 0.5 }}>
+                  <EditIcon/>
+                </IconButton>
                 <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteTask(task.id)} sx={{ ml: 2, mt: 0.5 }}>
                   <DeleteIcon />
                 </IconButton>

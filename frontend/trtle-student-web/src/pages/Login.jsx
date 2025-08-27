@@ -88,25 +88,24 @@ const Login = ({ onLogin }) => {
       toast.error("Por favor, preencha todos os campos.");
       return;
     }
-
+  
     try {
       // 1. Fazer requisição para a API
       const response = await api.post("/auth/login", {
         email: emailInput,
         password: passwordInput,
       });
-
       // 2. Verificar se a resposta foi bem-sucedida
       if (!response.data) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Erro no login");
       }
-
+  
       // 3. Extrair dados da resposta
       const data = await response.data;
 
       // 4. Login bem-sucedido
-  toast.success(`Login bem-sucedido! Bem-vindo(a), ${data.user.email}!`);
+  toast.success(`Login bem-sucedido! Bem-vindo(a)!`);
 
       // 5. Armazenar token (se a API retornar)
       if (data.access_token) {
