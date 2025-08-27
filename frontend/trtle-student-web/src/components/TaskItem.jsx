@@ -13,11 +13,12 @@ import {
 
 // Esquema de validação para o nome da tarefa
 const taskNameSchema = yup.object().shape({
-  name: yup.string().required("O nome da tarefa é obrigatório."),
+  name: yup.string(),
 });
 
 function TaskItem({ task, onStatusChange }) {
   const [isEditing, setIsEditing] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -54,59 +55,61 @@ function TaskItem({ task, onStatusChange }) {
   const isCompleted = task.status === "feito";
 
   return (
-    <ListItem
-      sx={{
-        py: 1,
-        px: 0,
-        borderBottom: "1px solid #e0e0e0",
-        "&:last-child": { borderBottom: "none" },
-        transition: "background-color 0.3s",
-        ...(isCompleted && {
-          textDecoration: "line-through",
-          color: "text.secondary",
-          backgroundColor: "#f0f0f0",
-        }),
-      }}
-    >
-      <FormControlLabel
-        control={
-          <Checkbox checked={isCompleted} onChange={handleCheckboxChange} />
-        }
-        label={
-          isEditing ? (
-            <form
-              onSubmit={handleSubmit(handleNameSubmit)}
-              style={{ width: "100%" }}
-            >
-              <TextField
-                fullWidth
-                variant="standard"
-                size="small"
-                {...register("name")}
-                onBlur={handleSubmit(handleNameSubmit)}
-                autoFocus
-                error={!!errors.name}
-                helperText={errors.name?.message}
+    <>
+      <ListItem
+        sx={{
+          py: 1,
+          px: 0,
+          borderBottom: "1px solid #e0e0e0",
+          "&:last-child": { borderBottom: "none" },
+          transition: "background-color 0.3s",
+          ...(isCompleted && {
+            textDecoration: "line-through",
+            color: "text.secondary",
+            backgroundColor: "#f0f0f0",
+          }),
+        }}
+      >
+        <FormControlLabel
+          control={
+            <Checkbox checked={isCompleted} onChange={handleCheckboxChange} />
+          }
+          label={
+            isEditing ? (
+              <form
+                onSubmit={handleSubmit(handleNameSubmit)}
+                style={{ width: "100%" }}
+              >
+                <TextField
+                  fullWidth
+                  variant="standard"
+                  size="small"
+                  {...register("name")}
+                  onBlur={handleSubmit(handleNameSubmit)}
+                  autoFocus
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
+                />
+              </form>
+            ) : (
+              <ListItemText
+                primary={
+                  <Typography
+                    onDoubleClick={handleDoubleClickName}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    {task.name}
+                  </Typography>
+                }
+                secondary={`Prioridade: ${task.priority}`}
+                sx={{ m: 0 }}
               />
-            </form>
-          ) : (
-            <ListItemText
-              primary={
-                <Typography
-                  onDoubleClick={handleDoubleClickName}
-                  sx={{ cursor: "pointer" }}
-                >
-                  {task.name}
-                </Typography>
-              }
-              secondary={`Prioridade: ${task.priority}`}
-              sx={{ m: 0 }}
-            />
-          )
-        }
-        sx={{ m: 0, width: "100%" }}
-      />
-    </ListItem>
+            )
+          }
+          sx={{ m: 0, width: "100%" }}
+        />
+      </ListItem>
+    </>
   );
 }
 
