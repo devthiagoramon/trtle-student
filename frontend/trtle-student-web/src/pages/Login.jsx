@@ -191,7 +191,11 @@ const Login = ({ onLogin }) => {
                 mb: 2,
               }}
             >
-              <Person sx={{ fontSize: 30, color: "#000000" }} />
+              <img
+                style={{ height: "6rem" }}
+                src="/img/trlte-icon.png"
+                alt="Tartle Icon"
+              />
             </Box>
 
             <Typography

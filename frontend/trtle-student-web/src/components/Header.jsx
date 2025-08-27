@@ -34,7 +34,14 @@ const Header = () => {
               <h2 className="user-name">{user.username}</h2>
               <h3 className="user-email">{user.email}</h3>
             </div>
-            <div className="icon-container"></div>
+            <div className="icon-container">
+              <img
+                style={{ height: "3.2rem" }}
+                className="user-icon"
+                src="/img/trlte-icon.png"
+                alt="User Icon"
+              />
+            </div>
           </div>
         </>
       )}
