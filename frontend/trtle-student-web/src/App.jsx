@@ -3,8 +3,9 @@ import "./App.css";
 import AppRoutes from "./routes/AppRoutes";
 import { useEffect } from "react";
 import { ToastContainer } from "react-toastify"; // Importando ToastContainer
-import Login from "./pages/Login"
+import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
+import { UserProvider } from "./context/userContext";
 
 function App() {
   const navigate = useNavigate();
@@ -13,7 +14,9 @@ function App() {
   }, []);
   return (
     <>
-      <AppRoutes/>
+      <UserProvider>
+        <AppRoutes />
+      </UserProvider>
       <ToastContainer />
     </>
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, useParams } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 // import ProtectedRoutes from "./ProtectedRoutes";
 
@@ -16,7 +16,8 @@ import Dashboard from "../pages/Dashboard";
 import Pomodoro from "../pages/PomodoroScreen";
 import ListaTarefas from "../pages/ListaTarefas";
 import Painel from "../pages/Painel";
-import Cadastro from "../pages/Cadastro"
+import Cadastro from "../pages/Cadastro";
+import ProtectedRoutes from "./ProtectedRoutes";
 
 const AppRoutes = () => {
   return (
@@ -26,13 +27,41 @@ const AppRoutes = () => {
           <Routes>
             {/* Rotas Públicas */}
             <Route path="/" element={<Login />} />
-            <Route path="*" element={<NotFound />} />
-            <Route path="/cadastro" element=  {<Cadastro/>}/>
+            <Route path="/cadastro" element={<Cadastro />} />
             {/* Rotas Protegidas */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/pomodoro" element={<Pomodoro />} />
-            <Route path="/lista_tarefas" element={<ListaTarefas />} />
-            <Route path="/tarefas" element={<Painel />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoutes>
+                  <Dashboard />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              path="/pomodoro"
+              element={
+                <ProtectedRoutes>
+                  <Pomodoro />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              path="/lista_tarefas"
+              element={
+                <ProtectedRoutes>
+                  <ListaTarefas />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              path="/tarefas"
+              element={
+                <ProtectedRoutes>
+                  <Painel />
+                </ProtectedRoutes>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </ListProvider>
       </TaskProvider>

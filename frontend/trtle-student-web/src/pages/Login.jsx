@@ -1,20 +1,22 @@
-import React, { useState } from "react";
+import { Lock, Person, Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Container,
+  createTheme,
+  IconButton,
+  InputAdornment,
+  Paper,
+  TextField,
+  ThemeProvider,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify"; // Importando ToastContainer
 import "react-toastify/dist/ReactToastify.css"; // Estilos para as notificações
-import {
-  Container,
-  Paper,
-  Typography,
-  TextField,
-  Button,
-  Box,
-  InputAdornment,
-  IconButton,
-  createTheme,
-  ThemeProvider,
-} from "@mui/material";
-import { Visibility, VisibilityOff, Person, Lock } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import api from "../api/api";
+import { useUser } from "../context/userContext";
 
 const theme = createTheme({
   palette: {
@@ -67,73 +69,67 @@ const theme = createTheme({
   },
 });
 
-const mockUsers = [
-  { id: 1, user: "rebecca", password: "123" },
-  { id: 2, user: "jaehyun", password: "456" },
-];
-
 const Login = ({ onLogin }) => {
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  
-  const handleToRegister = () =>{
+  const { handleSetUser } = useUser();
+
+  const handleToRegister = () => {
     navigate("/cadastro");
-  }
-  
-  const  handleSubmit = async(e) =>{
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  if (!usernameInput || !passwordInput) {
-    toast.error("Por favor, preencha todos os campos.");
-    return;
-  }
+    if (!usernameInput || !passwordInput) {
+      toast.error("Por favor, preencha todos os campos.");
+      return;
+    }
 
-  try {
-    // 1. Fazer requisição para a API
-    const response = await fetch('http://localhost:5000/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    try {
+      // 1. Fazer requisição para a API
+      const response = await api.post("/auth/login", {
         username: usernameInput,
-        password: passwordInput
-      }),
-    });
+        password: passwordInput,
+      });
 
-    // 2. Verificar se a resposta foi bem-sucedida
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Erro no login');
-    }
+      // 2. Verificar se a resposta foi bem-sucedida
+      if (!response.data) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erro no login");
+      }
 
-    // 3. Extrair dados da resposta
-    const data = await response.json();
-    
-    // 4. Login bem-sucedido
-    toast.success(`Login bem-sucedido! Bem-vindo(a), ${data.user.username}!`);
-    
-    // 5. Armazenar token (se a API retornar)
-    if (data.access_token) {
-      localStorage.setItem('token', data.access_token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-    }
-    
-    // 6. Navegar e chamar callback
-    navigate('/lista_tarefas');
-    if (onLogin) onLogin();
+      // 3. Extrair dados da resposta
+      const data = await response.data;
 
-  } catch (error) {
-    // 7. Tratar erros
-    console.error('Erro no login:', error);
-    
-    if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
-      toast.error("Erro de conexão. Verifique se o servidor está online.");
-    } else {
-      toast.error(error.message || "Nome de utilizador ou palavra-passe inválidos.");
+      // 4. Login bem-sucedido
+      toast.success(`Login bem-sucedido! Bem-vindo(a), ${data.user.username}!`);
+
+      // 5. Armazenar token (se a API retornar)
+      if (data.access_token) {
+        localStorage.setItem("token", data.access_token);
+        handleSetUser(data.user);
+      }
+
+      // 6. Navegar e chamar callback
+      navigate("/lista_tarefas");
+      if (onLogin) onLogin();
+    } catch (error) {
+      // 7. Tratar erros
+      console.error("Erro no login:", error);
+
+      if (
+        error.message.includes("NetworkError") ||
+        error.message.includes("Failed to fetch")
+      ) {
+        toast.error("Erro de conexão. Verifique se o servidor está online.");
+      } else {
+        toast.error(
+          error.message || "Nome de utilizador ou palavra-passe inválidos."
+        );
+      }
     }
-  }
   };
 
   const handleClickShowPassword = () => {
@@ -276,25 +272,25 @@ const Login = ({ onLogin }) => {
                 Entrar
               </Button>
             </Box>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 0, mb: 2, py: 1.2 }}
-                size="large"
-                onClick={handleToRegister}
-              >
-                Cadastrar
-              </Button>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 0, mb: 2, py: 1.2 }}
+              size="large"
+              onClick={handleToRegister}
+            >
+              Cadastrar
+            </Button>
 
-              <Box sx={{ textAlign: "center", mt: 2 }}>
-                <Typography variant="body2" color="textSecondary">
-                  Usuários de demonstração:
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  rebecca/123 ou jaehyun/456
-                </Typography>
-              </Box>
+            <Box sx={{ textAlign: "center", mt: 2 }}>
+              <Typography variant="body2" color="textSecondary">
+                Usuários de demonstração:
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                rebecca/123 ou jaehyun/456
+              </Typography>
+            </Box>
           </Paper>
         </Container>
       </Box>

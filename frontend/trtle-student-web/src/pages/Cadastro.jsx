@@ -17,6 +17,9 @@ import { Visibility, VisibilityOff, Person, Lock } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import api from "../api/api";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const validationSchema = Yup.object({
   username: Yup.string()
@@ -35,7 +38,10 @@ const validationSchema = Yup.object({
     .matches(/[a-z]/, "A senha deve conter pelo menos uma letra minúscula")
     .matches(/[A-Z]/, "A senha deve conter pelo menos uma letra maiúscula")
     .matches(/[0-9]/, "A senha deve conter pelo menos um número")
-    .matches(/[@$!%*?&]/, "A senha deve conter pelo menos um caractere especial")
+    .matches(
+      /[@$!%*?&]/,
+      "A senha deve conter pelo menos um caractere especial"
+    )
     .required("A senha é obrigatória"),
 });
 
@@ -63,9 +69,40 @@ const theme = createTheme({
 const Cadastro = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(validationSchema) });
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
+  };
+
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      const response = await api.post("/auth/register", data);
+
+      if (!response.data) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erro ao cadastrar usuário");
+      }
+
+      const dataResponse = await response.data;
+      console.log("✅ Usuário cadastrado:", dataResponse);
+
+      toast.success("Cadastro realizado com sucesso!");
+
+      setTimeout(() => navigate("/"), 2000);
+    } catch (error) {
+      console.error("❌ Erro na API:", error);
+      toast.error(error.message || "Erro inesperado, tente novamente.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -107,7 +144,12 @@ const Cadastro = () => {
               <Person sx={{ fontSize: 30, color: "#000000" }} />
             </Box>
 
-            <Typography component="h1" variant="h4" gutterBottom color="primary">
+            <Typography
+              component="h1"
+              variant="h4"
+              gutterBottom
+              color="primary"
+            >
               Crie Sua Conta
             </Typography>
 
@@ -115,140 +157,89 @@ const Cadastro = () => {
               Forneça credenciais válidas para criar conta
             </Typography>
 
-            <Formik
-              initialValues={{ username: "", email: "",password:"" }}
-              validationSchema={validationSchema}
-               onSubmit={async (values, { resetForm, setSubmitting }) => {
-                try {
-                  const response = await fetch("http://localhost:5000/auth/register", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(values),
-                  });
+            <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+              <TextField
+                fullWidth
+                margin="normal"
+                id="username"
+                name="username"
+                label="Usuário"
+                {...register("username")}
+                error={Boolean(errors.username)}
+                helperText={!!errors.username && errors.username.message}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Person sx={{ color: theme.palette.primary.icons }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
-                  if (!response.ok) {
-                    // Se a API respondeu com erro (400, 500, etc.)
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || "Erro ao cadastrar usuário");
-                  }
+              <TextField
+                fullWidth
+                margin="normal"
+                id="email"
+                name="email"
+                label="Email"
+                {...register("email")}
+                error={Boolean(errors.email)}
+                helperText={!!errors.email && errors.email.message}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Person sx={{ color: theme.palette.primary.icons }} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
-                  const data = await response.json();
-                  console.log("✅ Usuário cadastrado:", data);
+              <TextField
+                fullWidth
+                margin="normal"
+                id="password"
+                name="password"
+                label="Senha"
+                type={showPassword ? "text" : "password"}
+                {...register("password")}
+                error={Boolean(errors.password)}
+                helperText={!!errors.password && errors.password.message}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Lock color="action" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                      >
+                        {showPassword ? (
+                          <VisibilityOff sx={{ color: "#098912ff" }} />
+                        ) : (
+                          <Visibility sx={{ color: "#098912ff" }} />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
-                  toast.success("Cadastro realizado com sucesso!");
-                  resetForm();
-
-                  // Redireciona para login depois de 2 segundos
-                  setTimeout(() => navigate("/login"), 2000);
-                } catch (error) {
-                  console.error("❌ Erro na API:", error);
-                  toast.error(error.message || "Erro inesperado, tente novamente.");
-                } finally {
-                  setSubmitting(false); // garante que o botão volta ao estado normal
-                }
-              }}
-
-
-            >
-              {({
-                values,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                isSubmitting,
-              }) => (
-                <Form style={{ width: "100%" }}>
-                  <TextField
-                    fullWidth
-                    margin="normal"
-                    id="username"
-                    name="username"
-                    label="Usuário"
-                    value={values.username}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.username && Boolean(errors.username)}
-                    helperText={touched.username && errors.username}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Person sx={{ color: theme.palette.primary.icons }} />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-
-                  <TextField
-                    fullWidth
-                    margin="normal"
-                    id="email"
-                    name="email"
-                    label="Email"
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.email && Boolean(errors.email)}
-                    helperText={touched.email && errors.email}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Person sx={{ color: theme.palette.primary.icons }} />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-
-                  <TextField
-                    fullWidth
-                    margin="normal"
-                    id="password"
-                    name="password"
-                    label="Senha"
-                    type={showPassword ? "text" : "password"}
-                    value={values.senha}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={touched.senha && Boolean(errors.senha)}
-                    helperText={touched.senha && errors.senha}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Lock color="action" />
-                        </InputAdornment>
-                      ),
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            edge="end"
-                          >
-                            {showPassword ? (
-                              <VisibilityOff sx={{ color: "#098912ff" }} />
-                            ) : (
-                              <Visibility sx={{ color: "#098912ff" }} />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    sx={{ mt: 3, mb: 2, py: 1.2 }}
-                    size="large"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Enviando..." : "Cadastrar"}
-                  </Button>
-                </Form>
-              )}
-            </Formik>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                sx={{ mt: 3, mb: 2, py: 1.2 }}
+                size="large"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Enviando..." : "Cadastrar"}
+              </Button>
+            </form>
           </Paper>
         </Container>
       </Box>
