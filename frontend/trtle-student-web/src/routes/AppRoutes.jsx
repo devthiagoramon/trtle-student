@@ -54,6 +54,14 @@ const AppRoutes = () => {
               }
             />
             <Route
+              path="/lista_tarefas/:id"
+              element={
+                <ProtectedRoutes>
+                  <ListaTarefas />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
               path="/tarefas"
               element={
                 <ProtectedRoutes>
