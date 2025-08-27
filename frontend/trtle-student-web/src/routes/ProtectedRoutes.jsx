@@ -9,23 +9,24 @@ const ProtectedRoutes = ({ children }) => {
       const token = localStorage.getItem("token");
       if (!token) {
         navigator("/");
-        return;
+        return false;
       }
       const response = await api.get(`/auth/validate`);
-      if (response){
-        navigator("/dashboard")
-      }else{
+      if (!response) {
         navigator("/");
+        return false;
       }
+      return true;
     } catch (error) {
       console.error(error);
       navigator("/");
+      return false;
     }
   }, [navigator]);
 
   useEffect(() => {
-    handleValidateTokenUser()
-  }, []);
+    handleValidateTokenUser();
+  }, [handleValidateTokenUser]);
 
   return <>{children}</>;
 };

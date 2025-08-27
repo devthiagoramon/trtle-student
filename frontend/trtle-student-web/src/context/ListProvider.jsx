@@ -2,7 +2,7 @@ import { useState, useEffect, createContext, useContext } from "react";
 import axios from "axios";
 
 const ListContext = createContext();
-const API_URL = "http://localhost:5000/tasklists/user/1";
+const API_URL = "http://localhost:5000/tasklists/";
 
 export const useLists = () => {
   const context = useContext(ListContext);
@@ -20,18 +20,34 @@ export const ListProvider = ({ children }) => {
   //CREATE
   const addList = async (newList) => {
     try {
-      const response = await axios.post(API_URL, newList);
-      setList((prevList) => [...prevList, response.data]);
+      const token = localStorage.getItem("token");
+      const response = await axios.post(API_URL, newList, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Após criar, buscar todas as listas do usuário autenticado
+      const userId = localStorage.getItem("user_id");
+      await fetchLists(userId);
     } catch (err) {
       setError("Erro ao adicionar lista de tarefas.");
     }
   };
 
   //READ
-  const fetchLists = async () => {
+  const fetchLists = async (userId) => {
     setLoading(true);
     try {
-      const response = await axios.get(API_URL);
+      let url = API_URL;
+      if (userId) {
+        url = `http://localhost:5000/tasklists/user/${userId}`;
+      }
+      const token = localStorage.getItem("token");
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setList(response.data);
     } catch (err) {
       setError("Erro ao buscar listas de tarefas.");
@@ -40,10 +56,27 @@ export const ListProvider = ({ children }) => {
     }
   };
 
+  // Buscar listas ao montar o provider
+  useEffect(() => {
+    const userId = localStorage.getItem("user_id");
+    if (userId) {
+      fetchLists(userId);
+    }
+  }, []);
+
   //   UPDATE
   const updateList = async (id, updatedList) => {
     try {
-      const response = await axios.put(`${API_URL}${id}`, updatedList);
+      const token = localStorage.getItem("token");
+      const response = await axios.patch(
+        `${API_URL}${id}`,
+        updatedList,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setList((prevList) =>
         prevList.map((task) => (task.id === id ? response.data : task))
       );
@@ -55,7 +88,12 @@ export const ListProvider = ({ children }) => {
   //   DELETE
   const deleteList = async (id) => {
     try {
-      await axios.delete(`${API_URL}${id}`);
+      const token = localStorage.getItem("token");
+      await axios.delete(`${API_URL}${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setList((prevList) => prevList.filter((task) => task.id !== id));
     } catch (err) {
       setError("Erro ao remover lista de tarefas.");
@@ -63,9 +101,7 @@ export const ListProvider = ({ children }) => {
   };
 
   //   MOUTING
-  useEffect(() => {
-    fetchLists();
-  }, []);
+  // Removido o fetchLists automático ao montar. Agora, a busca deve ser feita manualmente após login/autenticação.
 
   const contextValue = {
     list,

@@ -2,7 +2,7 @@ import { useState, useEffect, createContext, useContext } from "react";
 import axios from "axios";
 
 const SessionContext = createContext();
-const API_URL = "http://localhost:3001/session/";
+const API_URL = "http://localhost:5000/session/";
 
 export const useSessions = () => {
   const context = useContext(SessionContext);
