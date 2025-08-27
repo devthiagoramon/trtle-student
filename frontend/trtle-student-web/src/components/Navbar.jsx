@@ -15,9 +15,11 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MenuOpenOutlinedIcon from "@mui/icons-material/MenuOpenOutlined";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavbar } from "../context/NavbarContext";
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
+  const { showNavbar, handleCloseNavbar } = useNavbar();
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -31,9 +33,9 @@ export default function Navbar() {
         height: "100%",
       }}
       role="presentation"
-      onClick={toggleDrawer(false)}
+      onClick={handleCloseNavbar}
     >
-      <button onClick={toggleDrawer(false)}>
+      <button onClick={handleCloseNavbar}>
         <MenuOpenOutlinedIcon />
       </button>
       <List>
@@ -71,7 +73,7 @@ export default function Navbar() {
         </ListItem>
 
         <ListItem disablePadding>
-          <Link to="/tarefas">
+          <Link to="/config">
             <ListItemButton>
               <ListItemIcon>
                 <SettingsOutlinedIcon />
@@ -86,12 +88,16 @@ export default function Navbar() {
 
   return (
     <div>
-      {!open && (
+      {/* {!open && (
         <button onClick={toggleDrawer(true)}>
           <MenuOutlinedIcon />
         </button>
-      )}
-      <Drawer open={open} onClose={toggleDrawer(false)} variant="persistent">
+      )} */}
+      <Drawer
+        open={showNavbar}
+        onClose={handleCloseNavbar}
+        variant="persistent"
+      >
         {DrawerList}
       </Drawer>
     </div>

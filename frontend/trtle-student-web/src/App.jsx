@@ -6,13 +6,15 @@ import { ToastContainer } from "react-toastify"; // Importando ToastContainer
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
 import { UserProvider } from "./context/userContext";
+import { NavbarProvider } from "./context/NavbarContext";
 
 function App() {
-
   return (
     <>
       <UserProvider>
-        <AppRoutes />
+        <NavbarProvider>
+          <AppRoutes />
+        </NavbarProvider>
       </UserProvider>
       <ToastContainer />
     </>
