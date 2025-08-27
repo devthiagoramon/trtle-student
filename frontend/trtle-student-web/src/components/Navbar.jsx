@@ -13,16 +13,24 @@ import AlarmOutlinedIcon from "@mui/icons-material/AlarmOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MenuOpenOutlinedIcon from "@mui/icons-material/MenuOpenOutlined";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useNavbar } from "../context/NavbarContext";
 
 export default function Navbar() {
   // const [open, setOpen] = useState(false);
   const { showNavbar, handleCloseNavbar } = useNavbar();
+  const navigate = useNavigate();
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user_id");
+    navigate("/");
   };
 
   const DrawerList = (
@@ -60,18 +68,6 @@ export default function Navbar() {
             </ListItemButton>
           </Link>
         </ListItem>
-
-        <ListItem disablePadding>
-          <Link to="/pomodoro">
-            <ListItemButton>
-              <ListItemIcon>
-                <AlarmOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText>Sessão de Foco</ListItemText>
-            </ListItemButton>
-          </Link>
-        </ListItem>
-
         <ListItem disablePadding>
           <Link to="/config">
             <ListItemButton>
@@ -81,6 +77,26 @@ export default function Navbar() {
               <ListItemText>Configurações</ListItemText>
             </ListItemButton>
           </Link>
+        </ListItem>
+        <ListItem disablePadding>
+          <button
+            style={{
+              backgroundColor: "transparent",
+              width: "100%",
+              border: "none",
+              cursor: "pointer",
+              textAlign: "left",
+              padding: "0",
+            }}
+            onClick={handleLogout}
+          >
+            <ListItemButton>
+              <ListItemIcon>
+                <LogoutOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText>Logout</ListItemText>
+            </ListItemButton>
+          </button>
         </ListItem>
       </List>
     </Box>

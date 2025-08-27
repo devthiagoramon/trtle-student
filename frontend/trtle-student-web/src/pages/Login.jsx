@@ -88,7 +88,7 @@ const Login = ({ onLogin }) => {
       toast.error("Por favor, preencha todos os campos.");
       return;
     }
-  
+
     try {
       // 1. Fazer requisição para a API
       const response = await api.post("/auth/login", {
@@ -100,12 +100,12 @@ const Login = ({ onLogin }) => {
         const errorData = await response.json();
         throw new Error(errorData.message || "Erro no login");
       }
-  
+
       // 3. Extrair dados da resposta
       const data = await response.data;
 
       // 4. Login bem-sucedido
-  toast.success(`Login bem-sucedido! Bem-vindo(a)!`);
+      toast.success(`Login bem-sucedido! Bem-vindo(a)!`);
 
       // 5. Armazenar token (se a API retornar)
       if (data.access_token) {
@@ -287,15 +287,6 @@ const Login = ({ onLogin }) => {
             >
               Cadastrar
             </Button>
-
-            <Box sx={{ textAlign: "center", mt: 2 }}>
-              <Typography variant="body2" color="textSecondary">
-                Usuários de demonstração:
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                rebecca/123 ou jaehyun/456
-              </Typography>
-            </Box>
           </Paper>
         </Container>
       </Box>

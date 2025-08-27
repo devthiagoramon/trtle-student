@@ -6,6 +6,7 @@
 
 import React from "react";
 import { Box, Paper, Typography, Grid } from "@mui/material";
+import Layout from "../components/Layout";
 import {
   BarChart,
   Bar,
@@ -34,61 +35,63 @@ const diff = thisWeek - lastWeek;
 
 const Dashboard = () => {
   return (
-    <Box
-      sx={{
-        bgcolor: "#f5f5f5",
-        minHeight: "100vh",
-        p: 4,
-      }}
-    >
-      <Typography variant="h4" gutterBottom>
-        Dashboard de Produtividade
-      </Typography>
+    <Layout>
+      <Box
+        sx={{
+          bgcolor: "#f5f5f5",
+          minHeight: "100vh",
+          p: 4,
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Dashboard de Produtividade
+        </Typography>
 
-      <Grid container spacing={3}>
-        {/* Gráfico */}
-        <Grid item xs={12} md={8}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Tempo de estudo na semana
-            </Typography>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={studyData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="hours" fill="#5cab7d" />
-              </BarChart>
-            </ResponsiveContainer>
-          </Paper>
-        </Grid>
+        <Grid container spacing={3}>
+          {/* Gráfico */}
+          <Grid item xs={12} md={8}>
+            <Paper sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Tempo de estudo na semana
+              </Typography>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={studyData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="day" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="hours" fill="#5cab7d" />
+                </BarChart>
+              </ResponsiveContainer>
+            </Paper>
+          </Grid>
 
-        {/* Produtividade */}
-        <Grid item xs={12} md={4}>
-          <Paper
-            sx={{
-              p: 3,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
-            }}
-          >
-            <Typography variant="h6">Produtividade</Typography>
-            <Typography variant="h4" color={diff >= 0 ? "green" : "red"}>
-              {diff >= 0 ? `+${diff.toFixed(1)}h` : `${diff.toFixed(1)}h`}
-            </Typography>
-            <Typography>
-              {diff >= 0
-                ? "Você estudou mais que a semana passada 🎉"
-                : "Você estudou menos que a semana passada ⚠️"}
-            </Typography>
-          </Paper>
+          {/* Produtividade */}
+          <Grid item xs={12} md={4}>
+            <Paper
+              sx={{
+                p: 3,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+              }}
+            >
+              <Typography variant="h6">Produtividade</Typography>
+              <Typography variant="h4" color={diff >= 0 ? "green" : "red"}>
+                {diff >= 0 ? `+${diff.toFixed(1)}h` : `${diff.toFixed(1)}h`}
+              </Typography>
+              <Typography>
+                {diff >= 0
+                  ? "Você estudou mais que a semana passada 🎉"
+                  : "Você estudou menos que a semana passada ⚠️"}
+              </Typography>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </Layout>
   );
 };
 

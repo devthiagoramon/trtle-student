@@ -55,7 +55,7 @@ button:focus-visible {
   color: var(--color-light);
   width: 100%;
   background-color: var(--color-primary);
-  height: 4rem;
+  padding-bottom: 1.6rem;
   display: flex;
   justify-content: space-between;
 }
