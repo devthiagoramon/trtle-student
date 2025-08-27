@@ -4,16 +4,15 @@
 import React, { useState } from "react";
 
 const Header = () => {
-  const [logedUser, setLogedUser] = useState({
-    name: "Ian Garrido",
-    email: "igr.eng23@uea.edu.br",
-  });
+  const userString =localStorage.getItem('user');
+  
+  const [logedUser, setLogedUser] = useState(userString? JSON.parse(userString):"");
 
   return (
     <header className="header">
       <div className="user-info">
         <div className="data-container">
-          <h2 className="user-name">{logedUser.name}</h2>
+          <h2 className="user-name">{logedUser.username}</h2>
           <h3 className="user-email">{logedUser.email}</h3>
         </div>
         <div className="icon-container"></div>

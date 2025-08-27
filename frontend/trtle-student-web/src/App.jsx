@@ -8,10 +8,7 @@ import Cadastro from "./pages/Cadastro";
 import { UserProvider } from "./context/userContext";
 
 function App() {
-  const navigate = useNavigate();
-  useEffect(() => {
-    navigate("/lista_tarefas");
-  }, []);
+
   return (
     <>
       <UserProvider>
