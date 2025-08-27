@@ -3,16 +3,15 @@
 // É exibido um calendário com datas de entrega
 // É exibido um gráfico com o tempo de acesso durante a semana (constância)
 // É exibido um botão de criar pomodoro
+// Mudei o nome da pagina de Dashboard page para Home
 
 import React from "react";
 import Layout from "../components/Layout";
 
-const Dashboard = () => {
+const Home = () => {
   return (
     <Layout>
-      <div>Dashboard</div>;
+      <div>Home</div>;
     </Layout>
   );
 };
-
-export default Dashboard;
