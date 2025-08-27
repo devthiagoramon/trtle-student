@@ -12,7 +12,7 @@ import { TaskProvider } from "../context/TaskProvider";
 // Páginas
 import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../pages/DashboardPage";
 import Pomodoro from "../pages/PomodoroScreen";
 import ListaTarefas from "../pages/ListaTarefas";
 import Painel from "../pages/Painel";
