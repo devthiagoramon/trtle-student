@@ -28,6 +28,7 @@ function TaskList({ list, tasks }) {
   const handleTitleSubmit = (data) => {
     console.log("Título da lista atualizado:", data.title);
     setIsEditingTitle(false);
+    setTimeout
     // Aqui você faria a chamada para a API para persistir a mudança
   };
 
