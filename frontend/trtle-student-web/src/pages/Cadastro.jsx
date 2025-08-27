@@ -29,7 +29,7 @@ const validationSchema = Yup.object({
     .email("Digite um email válido")
     .required("O email é obrigatório"),
 
-  senha: Yup.string()
+  password: Yup.string()
     .min(6, "A senha deve ter no mínimo 6 caracteres")
     .max(32, "A senha deve ter no máximo 32 caracteres")
     .matches(/[a-z]/, "A senha deve conter pelo menos uma letra minúscula")
@@ -116,7 +116,7 @@ const Cadastro = () => {
             </Typography>
 
             <Formik
-              initialValues={{ username: "", email: "", senha: "" }}
+              initialValues={{ username: "", email: "",password:"" }}
               validationSchema={validationSchema}
                onSubmit={async (values, { resetForm, setSubmitting }) => {
                 try {
@@ -202,8 +202,8 @@ const Cadastro = () => {
                   <TextField
                     fullWidth
                     margin="normal"
-                    id="senha"
-                    name="senha"
+                    id="password"
+                    name="password"
                     label="Senha"
                     type={showPassword ? "text" : "password"}
                     value={values.senha}

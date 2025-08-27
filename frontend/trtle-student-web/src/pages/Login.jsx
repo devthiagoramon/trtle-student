@@ -79,24 +79,61 @@ const Login = ({ onLogin }) => {
   const navigate = useNavigate();
   
   const handleToRegister = () =>{
-    console.log("to register");
     navigate("/cadastro");
   }
   
-  const handleSubmit = (e) => {
+  const  handleSubmit = async(e) =>{
     e.preventDefault();
+  if (!usernameInput || !passwordInput) {
+    toast.error("Por favor, preencha todos os campos.");
+    return;
+  }
 
-    const foundUser = mockUsers.find(
-      (user) => user.user.toLowerCase() === usernameInput.toLowerCase()
-    );
+  try {
+    // 1. Fazer requisição para a API
+    const response = await fetch('http://localhost:5000/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: usernameInput,
+        password: passwordInput
+      }),
+    });
 
-    if (foundUser && foundUser.password === passwordInput) {
-      toast.success(`Login bem-sucedido! Bem-vindo(a), ${foundUser.user}!`);
-      navigate('/lista_tarefas')
-      if (onLogin) onLogin();
-    } else {
-      toast.error("Nome de utilizador ou palavra-passe inválidos.");
+    // 2. Verificar se a resposta foi bem-sucedida
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Erro no login');
     }
+
+    // 3. Extrair dados da resposta
+    const data = await response.json();
+    
+    // 4. Login bem-sucedido
+    toast.success(`Login bem-sucedido! Bem-vindo(a), ${data.user.username}!`);
+    
+    // 5. Armazenar token (se a API retornar)
+    if (data.access_token) {
+      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+    }
+    
+    // 6. Navegar e chamar callback
+    navigate('/lista_tarefas');
+    if (onLogin) onLogin();
+
+  } catch (error) {
+    // 7. Tratar erros
+    console.error('Erro no login:', error);
+    
+    if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
+      toast.error("Erro de conexão. Verifique se o servidor está online.");
+    } else {
+      toast.error(error.message || "Nome de utilizador ou palavra-passe inválidos.");
+    }
+  }
   };
 
   const handleClickShowPassword = () => {
