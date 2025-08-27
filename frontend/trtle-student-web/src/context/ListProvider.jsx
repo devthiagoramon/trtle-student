@@ -2,7 +2,7 @@ import { useState, useEffect, createContext, useContext } from "react";
 import axios from "axios";
 
 const ListContext = createContext();
-const API_URL = "http://localhost:3001/list_task/";
+const API_URL = "http://localhost:5000/tasklists/user/1";
 
 export const useLists = () => {
   const context = useContext(ListContext);

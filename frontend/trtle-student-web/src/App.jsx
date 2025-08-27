@@ -7,10 +7,7 @@ import Login from "./pages/Login"
 import Cadastro from "./pages/Cadastro";
 
 function App() {
-  const navigate = useNavigate();
-  useEffect(() => {
-    navigate("/lista_tarefas");
-  }, []);
+
   return (
     <>
       <AppRoutes/>
