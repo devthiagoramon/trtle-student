@@ -74,7 +74,6 @@ export default function PomodoroScreen({
     <Layout>
       <Box
         sx={{
-          bgcolor: "#5cab7d",
           minHeight: "100vh",
           display: "grid",
           justifyItems: "center",
@@ -88,7 +87,6 @@ export default function PomodoroScreen({
             width: "90%",
             maxWidth: 1000,
             height: 650,
-            bgcolor: "#d9d9d9",
             borderRadius: 4,
             p: 4,
             position: "relative",

@@ -3,9 +3,14 @@
 import React from "react";
 import { useLists } from "../context/ListProvider";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import { Link } from "react-router-dom";
 
 const ListGrid = () => {
-  const { list } = useLists();
+  const { list, addList,  } = useLists();
+
+  const handleNewList = () => {
+    addList({ title: "Nova Lista", description: "" });
+  };
 
   return (
     <>
@@ -13,13 +18,20 @@ const ListGrid = () => {
         <h1>Lista de Tarefas</h1>
         <ul>
           <li className="list-card create-button">
-            <AddOutlinedIcon />
-            <p>Adicionar lista de tarefas</p>
+            <button
+              className="transparent-button"
+              onClick={() => handleNewList()}
+            >
+              <AddOutlinedIcon />
+              <p>Adicionar lista de tarefas</p>
+            </button>
           </li>
           {list.map((task_list) => (
             <li className="list-card" key={task_list.id}>
-              <h2>{task_list.title}</h2>
-              <p>{task_list.description}</p>
+              <Link to={`/tarefas/${task_list.id}`}>
+                <h2>{task_list.title}</h2>
+                <p>{task_list.description}</p>
+              </Link>
             </li>
           ))}
         </ul>

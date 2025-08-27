@@ -33,7 +33,7 @@ export default function Navbar() {
       role="presentation"
       onClick={toggleDrawer(false)}
     >
-      <button onClick={toggleDrawer(false)}>
+      <button className="transparent-button" onClick={toggleDrawer(false)}>
         <MenuOpenOutlinedIcon />
       </button>
       <List>
@@ -71,7 +71,7 @@ export default function Navbar() {
         </ListItem>
 
         <ListItem disablePadding>
-          <Link to="/tarefas">
+          <Link to="/config">
             <ListItemButton>
               <ListItemIcon>
                 <SettingsOutlinedIcon />
@@ -87,7 +87,10 @@ export default function Navbar() {
   return (
     <div>
       {!open && (
-        <button onClick={toggleDrawer(true)}>
+        <button
+          className="transparent-button open-navbar-button"
+          onClick={toggleDrawer(true)}
+        >
           <MenuOutlinedIcon />
         </button>
       )}

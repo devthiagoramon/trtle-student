@@ -76,9 +76,14 @@ const Login = ({ onLogin }) => {
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  const handleToRegister = () => {
+    console.log("to register");
+    navigate("/cadastro");
+  };
 
   const handleSubmit = (e) => {
-    const navigate = useNavigate();
     e.preventDefault();
 
     const foundUser = mockUsers.find(
@@ -87,7 +92,7 @@ const Login = ({ onLogin }) => {
 
     if (foundUser && foundUser.password === passwordInput) {
       toast.success(`Login bem-sucedido! Bem-vindo(a), ${foundUser.user}!`);
-      navigate('/lista_tarefas')
+      navigate("/lista_tarefas");
       if (onLogin) onLogin();
     } else {
       toast.error("Nome de utilizador ou palavra-passe inválidos.");
@@ -233,24 +238,25 @@ const Login = ({ onLogin }) => {
               >
                 Entrar
               </Button>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 0, mb: 2, py: 1.2 }}
-                size="large"
-              >
-                Cadastrar
-              </Button>
+            </Box>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 0, mb: 2, py: 1.2 }}
+              size="large"
+              onClick={handleToRegister}
+            >
+              Cadastrar
+            </Button>
 
-              <Box sx={{ textAlign: "center", mt: 2 }}>
-                <Typography variant="body2" color="textSecondary">
-                  Usuários de demonstração:
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  rebecca/123 ou jaehyun/456
-                </Typography>
-              </Box>
+            <Box sx={{ textAlign: "center", mt: 2 }}>
+              <Typography variant="body2" color="textSecondary">
+                Usuários de demonstração:
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                rebecca/123 ou jaehyun/456
+              </Typography>
             </Box>
           </Paper>
         </Container>

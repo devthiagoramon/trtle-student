@@ -103,6 +103,7 @@ button:focus-visible {
   width: 100%;
   gap: 3.2rem;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .list-card {
@@ -112,11 +113,22 @@ button:focus-visible {
   align-items: center;
   justify-content: center;
   padding: 0.6rem 1.2rem;
-  width: 30%;
+  width: 20%;
   border-radius: 1.2rem;
   color: var(--color-light);
 }
 
 .create-button {
   background-color: var(--color-dark);
+}
+
+.transparent-button {
+  background-color: transparent;
+  border: none;
+}
+
+.open-navbar-button {
+  width: 100%;
+  display: flex;
+  margin-left: 1.2rem;
 }
