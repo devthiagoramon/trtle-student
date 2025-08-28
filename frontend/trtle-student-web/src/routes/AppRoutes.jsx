@@ -12,12 +12,13 @@ import { TaskProvider } from "../context/TaskProvider";
 // Páginas
 import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../pages/DashboardPage";
 import Pomodoro from "../pages/PomodoroScreen";
 import ListaTarefas from "../pages/ListaTarefas";
 import Painel from "../pages/Painel";
 import Cadastro from "../pages/Cadastro";
 import ProtectedRoutes from "./ProtectedRoutes";
+import Config from "../pages/Config";
 
 const AppRoutes = () => {
   return (
@@ -54,10 +55,26 @@ const AppRoutes = () => {
               }
             />
             <Route
+              path="/lista_tarefas/:id"
+              element={
+                <ProtectedRoutes>
+                  <ListaTarefas />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
               path="/tarefas"
               element={
                 <ProtectedRoutes>
                   <Painel />
+                </ProtectedRoutes>
+              }
+            />
+            <Route
+              path="/config"
+              element={
+                <ProtectedRoutes>
+                  <Config />
                 </ProtectedRoutes>
               }
             />

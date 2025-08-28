@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useState } from "react";
 import api from "../api/api";
 
 const UserContext = createContext();
-const API_URL = "http://localhost:3001/user/";
+const API_URL = "http://localhost:5000/user/";
 
 export const useUser = () => {
   const context = useContext(UserContext);

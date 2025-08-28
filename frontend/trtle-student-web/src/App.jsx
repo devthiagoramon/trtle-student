@@ -1,14 +1,15 @@
 import { ToastContainer } from "react-toastify"; // Importando ToastContainer
 import "./App.css";
 import { UserProvider } from "./context/userContext";
-import AppRoutes from "./routes/AppRoutes";
+import { NavbarProvider } from "./context/NavbarContext";
 
 function App() {
-
   return (
     <>
       <UserProvider>
-        <AppRoutes />
+        <NavbarProvider>
+          <AppRoutes />
+        </NavbarProvider>
       </UserProvider>
       <ToastContainer />
     </>

@@ -13,14 +13,24 @@ import AlarmOutlinedIcon from "@mui/icons-material/AlarmOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MenuOpenOutlinedIcon from "@mui/icons-material/MenuOpenOutlined";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useNavbar } from "../context/NavbarContext";
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
+  const { showNavbar, handleCloseNavbar } = useNavbar();
+  const navigate = useNavigate();
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user_id");
+    navigate("/");
   };
 
   const DrawerList = (
@@ -31,9 +41,9 @@ export default function Navbar() {
         height: "100%",
       }}
       role="presentation"
-      onClick={toggleDrawer(false)}
+      onClick={handleCloseNavbar}
     >
-      <button onClick={toggleDrawer(false)}>
+      <button onClick={handleCloseNavbar}>
         <MenuOpenOutlinedIcon />
       </button>
       <List>
@@ -58,20 +68,8 @@ export default function Navbar() {
             </ListItemButton>
           </Link>
         </ListItem>
-
         <ListItem disablePadding>
-          <Link to="/pomodoro">
-            <ListItemButton>
-              <ListItemIcon>
-                <AlarmOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText>Sessão de Foco</ListItemText>
-            </ListItemButton>
-          </Link>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <Link to="/tarefas">
+          <Link to="/config">
             <ListItemButton>
               <ListItemIcon>
                 <SettingsOutlinedIcon />
@@ -80,18 +78,42 @@ export default function Navbar() {
             </ListItemButton>
           </Link>
         </ListItem>
+        <ListItem disablePadding>
+          <button
+            style={{
+              backgroundColor: "transparent",
+              width: "100%",
+              border: "none",
+              cursor: "pointer",
+              textAlign: "left",
+              padding: "0",
+            }}
+            onClick={handleLogout}
+          >
+            <ListItemButton>
+              <ListItemIcon>
+                <LogoutOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText>Logout</ListItemText>
+            </ListItemButton>
+          </button>
+        </ListItem>
       </List>
     </Box>
   );
 
   return (
     <div>
-      {!open && (
+      {/* {!open && (
         <button onClick={toggleDrawer(true)}>
           <MenuOutlinedIcon />
         </button>
-      )}
-      <Drawer open={open} onClose={toggleDrawer(false)} variant="persistent">
+      )} */}
+      <Drawer
+        open={showNavbar}
+        onClose={handleCloseNavbar}
+        variant="persistent"
+      >
         {DrawerList}
       </Drawer>
     </div>

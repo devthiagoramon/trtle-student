@@ -55,9 +55,9 @@ button:focus-visible {
   color: var(--color-light);
   width: 100%;
   background-color: var(--color-primary);
-  height: 6.4rem;
+  padding-bottom: 1.6rem;
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
 }
 
 .user-info {
@@ -85,7 +85,7 @@ button:focus-visible {
   background-color: var(--color-light);
   width: 95%;
   margin: 0 auto;
-  border-radius: 1.6rem;
+  /* border-radius: s1.6rem; */
 }
 
 /* LISTGRID */

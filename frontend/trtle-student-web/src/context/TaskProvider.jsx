@@ -2,7 +2,7 @@ import { useState, useEffect, createContext, useContext } from "react";
 import axios from "axios";
 
 const TaskContext = createContext();
-const API_URL = "http://localhost:3001/task/";
+const API_URL = "http://localhost:5000/tasks/";
 
 export const useTasks = () => {
   const context = useContext(TaskContext);
@@ -63,9 +63,7 @@ export const TaskProvider = ({ children }) => {
   };
 
   //   MOUTING
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  // Removido fetchTasks automático ao montar. Agora, a busca deve ser feita manualmente após login/autenticação.
 
   const contextValue = {
     task,

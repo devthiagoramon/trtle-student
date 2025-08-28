@@ -17,6 +17,7 @@ import { toast, ToastContainer } from "react-toastify"; // Importando ToastConta
 import "react-toastify/dist/ReactToastify.css"; // Estilos para as notificações
 import api from "../api/api";
 import { useUser } from "../context/userContext";
+import { useLists } from "../context/ListProvider";
 
 const theme = createTheme({
   palette: {
@@ -70,11 +71,12 @@ const theme = createTheme({
 });
 
 const Login = ({ onLogin }) => {
-  const [usernameInput, setUsernameInput] = useState("");
+  const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { handleSetUser } = useUser();
+  const { fetchLists } = useLists();
 
   const handleToRegister = () => {
     navigate("/cadastro");
@@ -82,7 +84,7 @@ const Login = ({ onLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!usernameInput || !passwordInput) {
+    if (!emailInput || !passwordInput) {
       toast.error("Por favor, preencha todos os campos.");
       return;
     }
@@ -90,10 +92,9 @@ const Login = ({ onLogin }) => {
     try {
       // 1. Fazer requisição para a API
       const response = await api.post("/auth/login", {
-        username: usernameInput,
+        email: emailInput,
         password: passwordInput,
       });
-
       // 2. Verificar se a resposta foi bem-sucedida
       if (!response.data) {
         const errorData = await response.json();
@@ -104,11 +105,15 @@ const Login = ({ onLogin }) => {
       const data = await response.data;
 
       // 4. Login bem-sucedido
-      toast.success(`Login bem-sucedido! Bem-vindo(a), ${data.user.username}!`);
+      toast.success(`Login bem-sucedido! Bem-vindo(a)!`);
 
       // 5. Armazenar token (se a API retornar)
       if (data.access_token) {
         localStorage.setItem("token", data.access_token);
+        if (data.user && data.user.id) {
+          localStorage.setItem("user_id", data.user.id);
+          fetchLists(data.user.id);
+        }
         handleSetUser(data.user);
       }
 
@@ -186,7 +191,11 @@ const Login = ({ onLogin }) => {
                 mb: 2,
               }}
             >
-              <Person sx={{ fontSize: 30, color: "#000000" }} />
+              <img
+                style={{ height: "6rem" }}
+                src="/img/trlte-icon.png"
+                alt="Tartle Icon"
+              />
             </Box>
 
             <Typography
@@ -211,13 +220,13 @@ const Login = ({ onLogin }) => {
                 margin="normal"
                 required
                 fullWidth
-                id="username"
-                label="Usuário"
-                name="username"
-                autoComplete="username"
+                id="email"
+                label="E-mail"
+                name="email"
+                autoComplete="email"
                 autoFocus
-                value={usernameInput}
-                onChange={(e) => setUsernameInput(e.target.value)}
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -282,15 +291,6 @@ const Login = ({ onLogin }) => {
             >
               Cadastrar
             </Button>
-
-            <Box sx={{ textAlign: "center", mt: 2 }}>
-              <Typography variant="body2" color="textSecondary">
-                Usuários de demonstração:
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                rebecca/123 ou jaehyun/456
-              </Typography>
-            </Box>
           </Paper>
         </Container>
       </Box>
