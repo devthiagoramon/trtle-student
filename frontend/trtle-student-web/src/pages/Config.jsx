@@ -97,37 +97,6 @@ const Config = () => {
         >
           <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
             <Box sx={{ position: "relative" }}>
-              <Avatar
-                src={photo || ""}
-                sx={{
-                  width: 150,
-                  height: 150,
-                  bgcolor: "#b1b0b0ff",
-                  boxShadow: 3,
-                }}
-              >
-                {!photo && <EditIcon sx={{ fontSize: 48, color: "gray" }} />}
-              </Avatar>
-
-              <IconButton
-                component="label"
-                sx={{
-                  position: "absolute",
-                  bottom: 0,
-                  right: 0,
-                  bgcolor: "#5cab7d",
-                  color: "white",
-                  "&:hover": { bgcolor: "#4a9b6d" },
-                }}
-              >
-                <EditIcon />
-                <input
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  onChange={handlePhotoChange}
-                />
-              </IconButton>
             </Box>
           </Box>
 
