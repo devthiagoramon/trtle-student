@@ -31,121 +31,77 @@ export default function CriarPomodoro() {
   }
 
   return (
-    <Box
+    <Paper
+      elevation={6}
       sx={{
-        display: "grid",
-        justifyItems: "center",
-        alignItems: "start",
-        p: 4,
+        p: 2,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        bgcolor: "#d9d9d9",
+        borderRadius: 2,
+        boxShadow: 3,
+        width: 310,
+        height: 300,
+        minWidth: 300,
+        ml: 1
       }}
     >
-      <Paper
-        elevation={6}
-        sx={{
-          width: "90%",
-          maxWidth: 450,
-          bgcolor: "#d9d9d9",
-          borderRadius: 4,
-          p: 4,
-          mt: 5,
-        }}
-      >
-        <Typography
-          variant="h5"
-          fontWeight="bold"
-          textAlign="center"
-          gutterBottom
-        >
-          Criar Pomodoro
-        </Typography>
+      <Typography variant="subtitle1" fontWeight="bold" textAlign="center" gutterBottom>
+        Criar Pomodoro
+      </Typography>
 
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            {/* Tempo de Foco */}
-            <Grid item xs={12} sx={{ mt: 3, width: "100%" }}>
-              <Typography variant="h6" fontWeight="bold">
-                Tempo de Foco
-              </Typography>
-            </Grid>
-            <Grid item xs={6} md={3}>
-              <TextField
-                label="Minutos"
-                type="number"
-                value={focusMinutes}
-                onChange={(e) => setFocusMinutes(Number(e.target.value))}
-                inputProps={{ min: 0 }}
-                sx={{ width: 90, mt: 3, ml: 2 }}
-              />
-            </Grid>
+      <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item xs={6}>
             <TextField
-              label="Segundos"
+              label="Foco em Minutos"
               type="number"
-              value={focusSeconds}
-              onChange={(e) => setFocusSeconds(Number(e.target.value))}
-              inputProps={{ min: 0, max: 59 }}
-              sx={{ width: 90, mt: 3 }}
+              value={focusMinutes}
+              onChange={(e) => setFocusMinutes(Number(e.target.value))}
+              inputProps={{ min: 0 }}
+              size="small"
+              fullWidth
             />
-            <Grid item xs={6} md={3}></Grid>
-
-            {/* Tempo de Pausa */}
-            <Grid item xs={12} sx={{ mt: 2, width: "100%" }}>
-              <Typography variant="h6" fontWeight="bold">
-                Tempo de Pausa
-              </Typography>
-            </Grid>
-            <Grid item xs={6} md={3}>
-              <TextField
-                label="Minutos"
-                type="number"
-                value={breakMinutes}
-                onChange={(e) => setBreakMinutes(Number(e.target.value))}
-                inputProps={{ min: 0 }}
-                sx={{ width: 90, mt: 3, ml: 1 }}
-              />
-            </Grid>
-            <Grid item xs={6} md={3}>
-              <TextField
-                label="Segundos"
-                type="number"
-                value={breakSeconds}
-                onChange={(e) => setBreakSeconds(Number(e.target.value))}
-                inputProps={{ min: 0, max: 59 }}
-                sx={{ width: 90, mt: 3 }}
-              />
-            </Grid>
-
-            {/* Número de Sessões */}
-            <Grid item xs={6} md={3}>
-              <TextField
-                label="Número de sessões"
-                type="number"
-                value={sets}
-                onChange={(e) => setSets(Number(e.target.value))}
-                inputProps={{ min: 1 }}
-                sx={{ width: 90, mt: 3 }}
-              />
-            </Grid>
-
-            {/* Botão Criar */}
-            <Grid item xs={12}>
-              <Box display="flex" justifyContent="center" mt={3}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{
-                    bgcolor: "#5cab7d",
-                    color: "#222",
-                    fontSize: "1.1rem",
-                    px: 4,
-                  }}
-                >
-                  Criar Pomodoro
-                </Button>
-              </Box>
-            </Grid>
           </Grid>
-        </form>
-      </Paper>
-    </Box>
+
+          <Grid item xs={6}>
+            <TextField
+              label="Pausa em Minutos"
+              type="number"
+              value={breakMinutes}
+              onChange={(e) => setBreakMinutes(Number(e.target.value))}
+              inputProps={{ min: 0 }}
+              size="small"
+              fullWidth
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              label="Sessões"
+              type="number"
+              value={sets}
+              onChange={(e) => setSets(Number(e.target.value))}
+              inputProps={{ min: 1 }}
+              size="small"
+              fullWidth
+              sx={{ mt: 0.5 }}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ bgcolor: "#5cab7d", color: "#222", fontSize: "0.8rem", mt: 1, width: "100%" }}
+            >
+              Criar
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+    </Paper>
   );
 }

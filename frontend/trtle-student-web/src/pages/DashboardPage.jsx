@@ -7,7 +7,11 @@
 import React from "react";
 import { Box, Paper, Typography, Grid } from "@mui/material";
 import Layout from "../components/Layout";
+<<<<<<< HEAD
 import CriarPomodoro from "../pages/CriarPomodoro";
+=======
+import CriarPomodoro from "./CriarPomodoro";
+>>>>>>> 2e1831ee35af1954d826f6918e6d0545d877c254
 import {
   BarChart,
   Bar,
@@ -16,40 +20,48 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
 } from "recharts";
 
 // Dados mockados (horas de estudo por dia)
 const studyData = [
-  { day: "Seg", hours: 2 },
-  { day: "Ter", hours: 3 },
-  { day: "Qua", hours: 1.5 },
-  { day: "Qui", hours: 4 },
-  { day: "Sex", hours: 2.5 },
-  { day: "Sáb", hours: 5 },
-  { day: "Dom", hours: 3 },
+  { day: "Seg", horas: 2 },
+  { day: "Ter", horas: 3 },
+  { day: "Qua", horas: 1.5 },
+  { day: "Qui", horas: 4 },
+  { day: "Sex", horas: 2.5 },
+  { day: "Sáb", horas: 5 },
+  { day: "Dom", horas: 3 },
 ];
 
 // Mock de produtividade
-const thisWeek = studyData.reduce((acc, cur) => acc + cur.hours, 0);
-const lastWeek = 18; // mock fixo
+const thisWeek = studyData.reduce((acc, cur) => acc + cur.horas, 0);
+const lastWeek = 18;
 const diff = thisWeek - lastWeek;
+
+// Mock de tarefas concluídas x pendentes
+const tasksData = [
+  { name: "Concluídas", value: 60 },
+  { name: "Pendentes", value: 40 },
+];
+
+const Colors = ["#4caf50", "#f44336"];
 
 const Dashboard = () => {
   return (
     <Layout>
-      <Box
-        sx={{
-          bgcolor: "#f5f5f5",
-          minHeight: "100vh",
-          p: 4,
-        }}
-      >
+      <Box sx={{ bgcolor: "#f5f5f5", minHeight: "100vh", p: 4 }}>
         <Typography variant="h4" gutterBottom>
           Dashboard de Produtividade
         </Typography>
 
-        <Grid container spacing={3}>
-          {/* Gráfico */}
+        {/* Grid com Gráfico de barras e Card de Produtividade */}
+        <Grid container spacing={3} sx={{ ml: 1}}>
+
+          {/* Gráfico de horas de estudo */}
           <Grid item xs={12} md={8}>
             <CriarPomodoro />
           </Grid>
@@ -64,17 +76,18 @@ const Dashboard = () => {
                   <XAxis dataKey="day" />
                   <YAxis />
                   <Tooltip />
-                  <Bar dataKey="hours" fill="#5cab7d" />
+                  <Bar dataKey="horas" fill="#5cab7d" />
                 </BarChart>
               </ResponsiveContainer>
             </Paper>
           </Grid>
 
-          {/* Produtividade */}
+          {/* Card Produtividade */}
           <Grid item xs={12} md={4}>
             <Paper
               sx={{
-                p: 3,
+                p: 5,
+                width: 300,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -88,12 +101,66 @@ const Dashboard = () => {
               </Typography>
               <Typography>
                 {diff >= 0
-                  ? "Você estudou mais que a semana passada 🎉"
-                  : "Você estudou menos que a semana passada ⚠️"}
+                  ? `Parabéns! Você teve uma evolução: ${thisWeek}h esta semana contra ${lastWeek}h na semana passada!`
+                  : thisWeek < lastWeek
+                  ? `Que pena! Sua produtividade caiu: ${thisWeek}h esta semana contra ${lastWeek}h na semana passada :(` 
+                  : `Você manteve o mesmo nível de produtividade: ${thisWeek}h em ambas as semanas!`}
               </Typography>
             </Paper>
           </Grid>
         </Grid>
+
+        {/* Box com CriarPomodoro e PieChart abaixo dos cards de cima */}
+        <Box
+          display="flex"
+          gap={4}
+          mt={5}
+          flexWrap="wrap"
+          justifyContent="flex-start"
+        >
+          {/* CriarPomodoro */}
+          <Box>
+            <CriarPomodoro />
+          </Box>
+
+          {/* PieChart de tarefas */}
+          <Box
+            sx={{
+              p: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              bgcolor: "#fff",
+              borderRadius: 2,
+              boxShadow: 3,
+              width: 300,
+              height: 300,
+              minWidth: 300,
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Tarefas realizadas
+            </Typography>
+            <ResponsiveContainer width="100%" height={200}>
+              <PieChart>
+                <Pie
+                  data={tasksData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={70}
+                  dataKey="value"
+                >
+                  {tasksData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={Colors[index]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </Box>
+        </Box>
       </Box>
     </Layout>
   );
