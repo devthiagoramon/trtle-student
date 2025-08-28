@@ -50,3 +50,17 @@ Essa é uma aplicação ReactJS para um sistema de gerenciamento de tarefas.
 - `cd frontend\trtle-student-web`
 - `npm i`
 - `npm run dev`
+
+## Telas
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/8826d624-c10a-4cf3-8545-32492d0469d1" />
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/f2b602e2-decb-460d-b17f-adac27c577e8" />
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/699c83d6-947c-45fe-af1e-0db40573dadb" />
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/c6d47458-6152-49ee-938d-ef0ba8443a35" />
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/7740fc2b-6300-4b7c-918c-d7ac229e64b4" />
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/817c96b9-56bd-4dbf-9c7d-7bd15e1c2d99" />
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/899c4c38-cf74-4e60-a6b3-bc1314e5b64a" />
+
+
+
+
+
