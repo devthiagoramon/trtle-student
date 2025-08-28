@@ -6,6 +6,7 @@ export default function PomodoroScreen({
   breakTime = 5 * 60,
   sets = 4,
   onCancel,
+  toggleList,
 }) {
   const [timeLeft, setTimeLeft] = useState(focusTime);
   const [isRunning, setIsRunning] = useState(true);
@@ -152,9 +153,9 @@ export default function PomodoroScreen({
                 height: 60,
                 fontSize: "1.2rem",
               }}
-              onClick={() =>
-                alert("Aqui você pode abrir a lista de atividades")
-              }
+              onClick={() => {
+                toggleList();
+              }}
             >
               Atividades
             </Button>

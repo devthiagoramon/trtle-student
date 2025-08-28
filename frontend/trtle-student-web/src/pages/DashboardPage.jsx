@@ -4,14 +4,11 @@
 // É exibido um gráfico com o tempo de acesso durante a semana (constância)
 // É exibido um botão de criar pomodoro
 
-import React from "react";
-import { Box, Paper, Typography, Grid } from "@mui/material";
+import { useState } from "react";
+import { Box, Paper, Typography, Grid, useScrollTrigger } from "@mui/material";
 import Layout from "../components/Layout";
-<<<<<<< HEAD
-import CriarPomodoro from "../pages/CriarPomodoro";
-=======
 import CriarPomodoro from "./CriarPomodoro";
->>>>>>> 2e1831ee35af1954d826f6918e6d0545d877c254
+import ListGrid from "../components/ListGrid";
 import {
   BarChart,
   Bar,
@@ -51,6 +48,12 @@ const tasksData = [
 const Colors = ["#4caf50", "#f44336"];
 
 const Dashboard = () => {
+  const [showList, setShowList] = useState(false);
+
+  const toggleList = () => {
+    setShowList((prev) => !prev);
+  };
+
   return (
     <Layout>
       <Box sx={{ bgcolor: "#f5f5f5", minHeight: "100vh", p: 4 }}>
@@ -59,12 +62,12 @@ const Dashboard = () => {
         </Typography>
 
         {/* Grid com Gráfico de barras e Card de Produtividade */}
-        <Grid container spacing={3} sx={{ ml: 1}}>
-
+        <Grid
+          container
+          spacing={3}
+          sx={{ ml: 1, display: "flex", justifyContent: "space-around" }}
+        >
           {/* Gráfico de horas de estudo */}
-          <Grid item xs={12} md={8}>
-            <CriarPomodoro />
-          </Grid>
           <Grid item xs={12} md={8}>
             <Paper sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>
@@ -103,26 +106,11 @@ const Dashboard = () => {
                 {diff >= 0
                   ? `Parabéns! Você teve uma evolução: ${thisWeek}h esta semana contra ${lastWeek}h na semana passada!`
                   : thisWeek < lastWeek
-                  ? `Que pena! Sua produtividade caiu: ${thisWeek}h esta semana contra ${lastWeek}h na semana passada :(` 
+                  ? `Que pena! Sua produtividade caiu: ${thisWeek}h esta semana contra ${lastWeek}h na semana passada :(`
                   : `Você manteve o mesmo nível de produtividade: ${thisWeek}h em ambas as semanas!`}
               </Typography>
             </Paper>
           </Grid>
-        </Grid>
-
-        {/* Box com CriarPomodoro e PieChart abaixo dos cards de cima */}
-        <Box
-          display="flex"
-          gap={4}
-          mt={5}
-          flexWrap="wrap"
-          justifyContent="flex-start"
-        >
-          {/* CriarPomodoro */}
-          <Box>
-            <CriarPomodoro />
-          </Box>
-
           {/* PieChart de tarefas */}
           <Box
             sx={{
@@ -159,6 +147,22 @@ const Dashboard = () => {
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
+          </Box>
+        </Grid>
+
+        {/* Box com CriarPomodoro e PieChart abaixo dos cards de cima */}
+        <Box
+          display="flex"
+          gap={4}
+          mt={5}
+          flexWrap="wrap"
+          justifyContent="center"
+          alignContent="center"
+        >
+          {/* CriarPomodoro */}
+          <Box>
+            <CriarPomodoro toggleList={toggleList} />
+            {showList && <ListGrid />}
           </Box>
         </Box>
       </Box>

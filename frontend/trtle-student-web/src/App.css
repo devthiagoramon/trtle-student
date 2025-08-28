@@ -90,7 +90,6 @@ button:focus-visible {
 
 /* LISTGRID */
 .list-grid {
-  width: 100%;
   padding: 2rem;
 }
 
@@ -100,7 +99,6 @@ button:focus-visible {
 }
 
 .list-grid ul {
-  width: 100%;
   gap: 3.2rem;
   display: flex;
   flex-wrap: wrap;

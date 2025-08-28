@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Box, Paper, Typography, Grid, TextField, Button } from "@mui/material";
 import PomodoroScreen from "./PomodoroScreen";
 
-export default function CriarPomodoro() {
+export default function CriarPomodoro({ toggleList }) {
   const [focusMinutes, setFocusMinutes] = useState(25);
   const [focusSeconds, setFocusSeconds] = useState(0);
   const [breakMinutes, setBreakMinutes] = useState(5);
@@ -25,6 +25,7 @@ export default function CriarPomodoro() {
       <PomodoroScreen
         {...pomodoroConfig}
         onCancel={() => setPomodoroConfig(null)}
+        toggleList={toggleList}
       />
     );
   }
