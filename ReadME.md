@@ -1,5 +1,12 @@
 # TrtleStudy
 
+##Desenvolvedores:
+- Emanuel Ami Da Silva Hernandez - emanuel-ami / EmanuelAmi-UEA
+- Ian Garrido Reis - IRGarrido
+- Rebecca Esmirna Ribeiro dos Reis - devthiagoramon
+- Thiago Ramon Martins Barros - devhiagoramon
+- Victor Andrews Viana Rodrigues - itsdrews
+
 Essa é uma aplicação ReactJS para um sistema de gerenciamento de tarefas.
 
 ## Funcionalidades:
