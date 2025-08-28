@@ -1,11 +1,7 @@
-import { useNavigate } from "react-router-dom";
-import "./App.css";
-import AppRoutes from "./routes/AppRoutes";
-import { useEffect } from "react";
 import { ToastContainer } from "react-toastify"; // Importando ToastContainer
-import Login from "./pages/Login";
-import Cadastro from "./pages/Cadastro";
+import "./App.css";
 import { UserProvider } from "./context/userContext";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
 
