@@ -1,5 +1,5 @@
-import { useState, useEffect, createContext, useContext } from "react";
 import axios from "axios";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const ListContext = createContext();
 const API_URL = "http://localhost:5000/tasklists/";
@@ -68,15 +68,11 @@ export const ListProvider = ({ children }) => {
   const updateList = async (id, updatedList) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.patch(
-        `${API_URL}${id}`,
-        updatedList,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.patch(`${API_URL}${id}`, updatedList, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setList((prevList) =>
         prevList.map((task) => (task.id === id ? response.data : task))
       );

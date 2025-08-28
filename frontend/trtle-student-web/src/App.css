@@ -103,6 +103,7 @@ button:focus-visible {
   width: 100%;
   gap: 3.2rem;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .list-card {
@@ -111,10 +112,20 @@ button:focus-visible {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.6rem 1.2rem;
-  width: 30%;
+  width: 16%;
+  margin: 0 auto;
+  height: 16rem;
   border-radius: 1.2rem;
   color: var(--color-light);
+}
+
+.list-card h2 {
+  font-size: 1rem;
+  max-width: 80%;
+}
+.list-card p {
+  max-width: 80%;
+  font-size: 0.8rem;
 }
 
 .create-button {

@@ -1,102 +1,31 @@
-// Esta página exibe todas as listas criadas
-// Ao selecionar uma listas, as primeiras 5 tarefas da listas são exibidas em uma barra lateral
-// O primeiro botão permite a inserção de uma nova lista, abrindo a página ListaTarefas sem nenhuma tarefa definida
-// Se selecionar uma lista já criada, os valores são pré-definidos
-
-
-// Página de Listas e Detalhes de Tarefas
 import React, { useEffect, useState } from "react";
 import { useUser } from "../context/userContext";
 import { useLists } from "../context/ListProvider";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
 import Layout from "../components/Layout";
 import ListGrid from "../components/ListGrid";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Button, Modal, Box, TextField, List, ListItem, Typography, IconButton } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
-import api from "../api/api";
+import {
+  Button,
+  Modal,
+  Box,
+  TextField,
+  List,
+  ListItem,
+  Typography,
+  IconButton,
+  Checkbox,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const API_URL = "http://localhost:5000/tasks";
 
 const ListaTarefas = () => {
-  // Função para remover tarefa (agora dentro do componente)
-  const handleDeleteTask = async (taskId) => {
-    const token = localStorage.getItem("token");
-    try {
-      await axios.delete(`${API_URL}/${taskId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      fetchTasks();
-    } catch (err) {
-      setTaskError("Erro ao remover tarefa.");
-    }
-  };
- const handleEditTask = async (taskId) => {
-  const token = localStorage.getItem("token");
-
-  try {
-    const response = await axios.get(`${API_URL}/${taskId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    const task = response.data;
-
-    // Preenche os campos com os dados da tarefa
-    setTaskName(task.name);
-    setTaskDescription(task.description);
-    setTaskPriority(task.priority);
-    setTaskError("");
-    setTaskStatus(task.status)
-
-    // Exibe modal
-    handleOpenTaskModal();
-
-    // Exemplo: exibir o JSON da tarefa no console
-    console.log(JSON.stringify(task, null, 2));
-
-  } catch (err) {
-    setTaskError("Erro ao carregar tarefa.");
-    console.error(err);
-  }
-
-  if (!taskName || !taskPriority) {
-      setTaskError("Preencha todos os campos obrigatórios.");
-      setTaskLoading(false);
-      return;
-    }
-    try {
-      await axios.patch(
-        `${API_URL}/`,
-        {
-          name: taskName,
-          description: taskDescription,
-          priority: taskPriority,
-          status :taskStatus,
-          list_id: id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      handleCloseTaskModal();
-      fetchTasks();
-    } catch (err) {
-      setTaskError("Erro ao Atualizar tarefa.");
-    } finally {
-      setTaskLoading(false);
-    }
-};
-
   const { user, handleFetchUser } = useUser();
   const { id } = useParams();
   const { list, updateList } = useLists();
+
   // --- ESTADO E FUNÇÕES DE EDIÇÃO DE LISTA ---
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editTitle, setEditTitle] = useState("");
@@ -104,8 +33,7 @@ const ListaTarefas = () => {
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState("");
 
-  // Busca a lista atual pelo id da URL
-  const currentList = list.find(l => String(l.id) === String(id));
+  const currentList = list.find((l) => String(l.id) === String(id));
 
   const handleOpenEditModal = () => {
     if (currentList) {
@@ -115,12 +43,14 @@ const ListaTarefas = () => {
       setEditModalOpen(true);
     }
   };
+
   const handleCloseEditModal = () => {
     setEditModalOpen(false);
     setEditTitle("");
     setEditDescription("");
     setEditError("");
   };
+
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     setEditLoading(true);
@@ -138,29 +68,26 @@ const ListaTarefas = () => {
     } finally {
       setEditLoading(false);
     }
-    setTimeout (() => {
+    setTimeout(() => {
       window.location.reload();
-    },300 )
-    
+    }, 300);
   };
+
   const formatDate = (timestamp) => {
-    if (!timestamp) return '';
-    const [dayofWeek,dia,mes,ano,horario,fuso] = timestamp.split(' ');
-    return `${dia} ${mes} ${ano}`
-    
-
-
-};
+    if (!timestamp) return "";
+    const [dayofWeek, dia, mes, ano, horario, fuso] = timestamp.split(" ");
+    return `${dia} ${mes} ${ano}`;
+  };
 
   // --- DETALHE DE LISTA ---
   const [tasks, setTasks] = useState([]);
   const [openTaskModal, setOpenTaskModal] = useState(false);
   const [taskName, setTaskName] = useState("");
-  const [taskDescription, setTaskDescription] = useState("");
   const [taskPriority, setTaskPriority] = useState(1);
   const [taskError, setTaskError] = useState("");
   const [taskLoading, setTaskLoading] = useState(false);
-  const [taskStatus,setTaskStatus] = useState(1);
+  const [taskStatus, setTaskStatus] = useState(1);
+  const [editingTaskId, setEditingTaskId] = useState(null);
 
   useEffect(() => {
     if (!user) handleFetchUser();
@@ -168,10 +95,9 @@ const ListaTarefas = () => {
 
   useEffect(() => {
     if (id) fetchTasks();
-    // eslint-disable-next-line
   }, [id]);
 
-  // --- FUNÇÕES DE TAREFA (DETALHE) ---
+  // --- FUNÇÕES DE TAREFA ---
   const fetchTasks = async () => {
     try {
       const response = await axios.get(`${API_URL}/list/${id}`);
@@ -180,59 +106,140 @@ const ListaTarefas = () => {
       setTaskError("Erro ao buscar tarefas.");
     }
   };
+
   const handleOpenTaskModal = () => setOpenTaskModal(true);
   const handleCloseTaskModal = () => {
     setOpenTaskModal(false);
     setTaskName("");
-    setTaskDescription("");
     setTaskPriority(1);
+    setTaskStatus(1);
     setTaskError("");
+    setEditingTaskId(null);
   };
+
+  const handleCheckboxChange = async (taskId) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId
+          ? {
+              ...task,
+              status: task.status === "pendente" ? "concluida" : "pendente",
+            }
+          : task
+      )
+    );
+
+    const taskToUpdate = tasks.find((task) => task.id === taskId);
+    if (!taskToUpdate) return;
+
+    const token = localStorage.getItem("token");
+    try {
+      await axios.patch(
+        `${API_URL}/${taskId}`,
+        {
+          status: taskToUpdate.status === "pendente" ? "concluida" : "pendente",
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+    } catch (err) {
+      console.error("Erro ao atualizar status da tarefa:", err);
+    }
+  };
+
+  const startEditTask = async (taskId) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(`${API_URL}/${taskId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const task = response.data;
+      setTaskName(task.name);
+      setTaskPriority(task.priority);
+      setTaskStatus(task.status);
+      setEditingTaskId(taskId); // 👈 guarda o ID da task em edição
+      setTaskError("");
+      handleOpenTaskModal();
+    } catch (err) {
+      setTaskError("Erro ao carregar tarefa.");
+    }
+  };
+
   const handleTaskSubmit = async (e) => {
     e.preventDefault();
     setTaskLoading(true);
     setTaskError("");
+
     if (!taskName || !taskPriority) {
       setTaskError("Preencha todos os campos obrigatórios.");
       setTaskLoading(false);
       return;
     }
+
+    const token = localStorage.getItem("token");
+
     try {
-      const token = localStorage.getItem("token");
-      await axios.post(
-        `${API_URL}/`,
-        {
-          name: taskName,
-          description: taskDescription,
-          priority: taskPriority,
-          status :"pendente",
-          list_id: id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      if (editingTaskId) {
+        await axios.patch(
+          `${API_URL}/${editingTaskId}`,
+          {
+            name: taskName,
+            priority: taskPriority,
+            status: taskStatus,
+            list_id: id,
           },
-        }
-      );
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } else {
+        await axios.post(
+          `${API_URL}/`,
+          {
+            name: taskName,
+            priority: taskPriority,
+            status: "pendente",
+            list_id: id,
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      }
+
       handleCloseTaskModal();
       fetchTasks();
     } catch (err) {
-      setTaskError("Erro ao adicionar tarefa.");
+      setTaskError("Erro ao salvar tarefa.");
     } finally {
       setTaskLoading(false);
     }
   };
 
+  const handleDeleteTask = async (taskId) => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.delete(`${API_URL}/${taskId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      fetchTasks();
+    } catch (err) {
+      setTaskError("Erro ao remover tarefa.");
+    }
+  };
+
   return (
     <Layout>
-      {/* --- SEÇÃO: LISTA DE TODAS AS LISTAS --- */}
       {!id && <ListGrid />}
 
-      {/* --- SEÇÃO: DETALHE DE UMA LISTA (TAREFAS) --- */}
       {id && (
         <div style={{ padding: 24 }}>
-          <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
-            <Typography variant="h4" gutterBottom sx={{ mr: 2, textAlign: 'center' }}>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            mb={2}
+          >
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{ mr: 2, textAlign: "center" }}
+            >
               {currentList ? currentList.title : "Tarefas da Lista"}
             </Typography>
             <Button
@@ -249,19 +256,22 @@ const ListaTarefas = () => {
           <Typography variant="subtitle1" gutterBottom>
             {currentList ? currentList.description : ""}
           </Typography>
+
           {/* Modal de edição da lista */}
           <Modal open={editModalOpen} onClose={handleCloseEditModal}>
-            <Box sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 350,
-              bgcolor: 'background.paper',
-              borderRadius: 2,
-              boxShadow: 24,
-              p: 4,
-            }}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 350,
+                bgcolor: "background.paper",
+                borderRadius: 2,
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
               <form onSubmit={handleEditSubmit}>
                 <h2>Editar Lista</h2>
                 <TextField
@@ -269,76 +279,118 @@ const ListaTarefas = () => {
                   fullWidth
                   margin="normal"
                   value={editTitle}
-                  onChange={e => setEditTitle(e.target.value)}
+                  onChange={(e) => setEditTitle(e.target.value)}
                 />
                 <TextField
                   label="Descrição"
                   fullWidth
                   margin="normal"
                   value={editDescription}
-                  onChange={e => setEditDescription(e.target.value)}
+                  onChange={(e) => setEditDescription(e.target.value)}
                 />
-                {editError && <p style={{color: 'red'}}>{editError}</p>}
-                <Button type="submit" variant="contained" color="primary" fullWidth disabled={editLoading} sx={{mt:2}}>
+                {editError && <p style={{ color: "red" }}>{editError}</p>}
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  disabled={editLoading}
+                  sx={{ mt: 2 }}
+                >
                   {editLoading ? "Salvando..." : "Salvar"}
                 </Button>
               </form>
             </Box>
           </Modal>
-          <Button variant="contained" color="primary" onClick={handleOpenTaskModal} sx={{ mb: 2 }}>
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenTaskModal}
+            sx={{ mb: 2 }}
+          >
             Adicionar tarefa
           </Button>
-          <List>
-            {tasks.map((task) => (
-              <ListItem key={task.id} sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>{task.name}</Typography>
-                  <Typography variant="body1" sx={{ mt: 0.5 }}>{task.description}</Typography>
-                  <Typography variant="caption" sx={{ mt: 0.5, display: 'block' }}>
 
-                    Prioridade: {task.priority} |
-                    Status: {task.status ? task.status : "-"} |
-                    Criada em: {task.created_at ? formatDate(task.created_at): console.log(task)}
+          <List sx={{ display: "flex", flexDirection: "column" }}>
+            {tasks.map((task) => (
+              <ListItem
+                key={task.id}
+                sx={{
+                  py: 1,
+                  px: 0,
+                  borderBottom: "1px solid #e0e0e0",
+                  "&:last-child": { borderBottom: "none" },
+                  transition: "background-color 0.3s",
+                  order: task.priority,
+                  ...(task.status !== "pendente" && {
+                    textDecoration: "line-through",
+                    color: "text.secondary",
+                    backgroundColor: "#f0f0f0",
+                  }),
+                }}
+              >
+                <Checkbox
+                  checked={task.status !== "pendente"}
+                  onChange={() => handleCheckboxChange(task.id)}
+                  sx={{ mr: 1, p: 0 }}
+                />
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+                    {task.name}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{ mt: 0.5, display: "block" }}
+                  >
+                    Prioridade: {task.priority}| Criada em:{" "}
+                    {task.created_at ? formatDate(task.created_at) : "-"}
                   </Typography>
                 </Box>
-                <IconButton edge = "end" aria-label ="edit" onClick={() => handleEditTask(task.id)} sx={{ ml: 2, mt: 0.5 }}>
-                  <EditIcon/>
+                <IconButton
+                  edge="end"
+                  aria-label="edit"
+                  onClick={() => startEditTask(task.id)}
+                  sx={{ ml: 2, mt: 0.5 }}
+                >
+                  <EditIcon />
                 </IconButton>
-                <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteTask(task.id)} sx={{ ml: 2, mt: 0.5 }}>
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => handleDeleteTask(task.id)}
+                  sx={{ ml: 2, mt: 0.5 }}
+                >
                   <DeleteIcon />
                 </IconButton>
               </ListItem>
             ))}
           </List>
-          {/* Modal de criação de tarefa */}
+
+          {/* Modal de criação/edição de tarefa */}
           <Modal open={openTaskModal} onClose={handleCloseTaskModal}>
-            <Box sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 350,
-              bgcolor: 'background.paper',
-              borderRadius: 2,
-              boxShadow: 24,
-              p: 4,
-            }}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 350,
+                bgcolor: "background.paper",
+                borderRadius: 2,
+                boxShadow: 24,
+                p: 4,
+              }}
+            >
               <form onSubmit={handleTaskSubmit}>
-                <h2>Nova Tarefa</h2>
+                <h2>{editingTaskId ? "Editar Tarefa" : "Nova Tarefa"}</h2>
                 <TextField
                   label="Nome"
                   fullWidth
                   margin="normal"
                   value={taskName}
-                  onChange={e => setTaskName(e.target.value)}
+                  onChange={(e) => setTaskName(e.target.value)}
                   required
-                />
-                <TextField
-                  label="Descrição"
-                  fullWidth
-                  margin="normal"
-                  value={taskDescription}
-                  onChange={e => setTaskDescription(e.target.value)}
                 />
                 <TextField
                   label="Prioridade"
@@ -346,12 +398,25 @@ const ListaTarefas = () => {
                   fullWidth
                   margin="normal"
                   value={taskPriority}
-                  onChange={e => setTaskPriority(Number(e.target.value))}
+                  onChange={(e) => setTaskPriority(Number(e.target.value))}
                   required
                 />
-                {taskError && <p style={{color: 'red'}}>{taskError}</p>}
-                <Button type="submit" variant="contained" color="primary" fullWidth disabled={taskLoading} sx={{mt:2}}>
-                  {taskLoading ? "Adicionando..." : "Adicionar"}
+                {taskError && <p style={{ color: "red" }}>{taskError}</p>}
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  disabled={taskLoading}
+                  sx={{ mt: 2 }}
+                >
+                  {taskLoading
+                    ? editingTaskId
+                      ? "Salvando..."
+                      : "Adicionando..."
+                    : editingTaskId
+                    ? "Salvar"
+                    : "Adicionar"}
                 </Button>
               </form>
             </Box>

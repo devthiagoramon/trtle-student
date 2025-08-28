@@ -227,13 +227,6 @@ const Login = ({ onLogin }) => {
                 autoFocus
                 value={emailInput}
                 onChange={(e) => setEmailInput(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Person sx={{ color: theme.palette.primary.icons }} />
-                    </InputAdornment>
-                  ),
-                }}
               />
               <TextField
                 margin="normal"
@@ -246,28 +239,6 @@ const Login = ({ onLogin }) => {
                 autoComplete="current-password"
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Lock color="action" />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        edge="end"
-                      >
-                        {showPassword ? (
-                          <VisibilityOff sx={{ color: "#098912ff" }} />
-                        ) : (
-                          <Visibility sx={{ color: "#098912ff" }} />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
               />
 
               <Button
