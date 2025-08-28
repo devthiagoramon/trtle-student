@@ -16,7 +16,6 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState();
 
   const handleSetUser = (user) => {
-    if (!user) return;
     setUser(user)
   }
 

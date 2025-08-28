@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   TextField,
@@ -6,17 +6,69 @@ import {
   Avatar,
   Paper,
   IconButton,
+  Typography,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import Layout from "../components/Layout";
+import { useUser } from "../context/userContext";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import api from "../api/api";
+import { toast } from "react-toastify";
+
+const schema = yup
+  .object({
+    username: yup.string().required("Digite o seu user!"),
+    email: yup
+      .string()
+      .email("Digite um e-mail valido!")
+      .required("Digite o seu e-mail"),
+  })
+  .required();
 
 const Config = () => {
   const [photo, setPhoto] = useState(null);
+  const { user, handleSetUser, handleFetchUser } = useUser();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      email: user?.email || "",
+      username: user?.username || ""
+    }
+  });
 
   const handlePhotoChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       setPhoto(URL.createObjectURL(file)); // cria URL temporária da imagem
+    }
+  };
+
+  useEffect(() => {
+    handleFetchUser();
+    reset({
+      username: user?.username,
+      email: user?.email,
+    });
+  }, [user]);
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await api.patch(`/users/${user.id}`, {
+        username: data.username,
+        email: data.email,
+      });
+      handleSetUser(response.data);
+      toast.success("Usuário atualizado com sucesso!");
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -80,25 +132,37 @@ const Config = () => {
           </Box>
 
           <Box
+            component="form"
+            onSubmit={handleSubmit(onSubmit)}
             sx={{
               display: "flex",
               flexDirection: "column",
-              gap: 3,
+              gap: 1,
               maxWidth: 600,
               mx: "auto",
             }}
           >
-            <TextField label="Nome de usuário" variant="outlined" fullWidth />
-            <TextField label="Email" variant="outlined" fullWidth />
+            <Typography sx={{alignSelf: "flex-start"}} variant="body1">Nome do usuário</Typography>
             <TextField
-              label="Senha"
-              type="password"
+              error={!!errors.username}
+              helperText={!!errors.username && errors.username.message}
+             
               variant="outlined"
               fullWidth
+              {...register("username")}
             />
-
+            <Typography sx={{alignSelf: "flex-start"}} variant="body1">E-mail</Typography>
+            <TextField
+              error={!!errors.email}
+              helperText={!!errors.email && errors.email.message}
+             
+              variant="outlined"
+              fullWidth
+              {...register("email")}
+            />
             <Button
               variant="contained"
+              type="submit"
               size="large"
               sx={{
                 bgcolor: "#5cab7d",
