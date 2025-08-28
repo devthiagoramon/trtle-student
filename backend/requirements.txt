@@ -1,0 +1,7 @@
+flask-jwt-extended
+flask-cors
+flask-migrate
+flask-sqlalchemy
+flask-bcrypt
+psycopg2-binary
+dotenv
