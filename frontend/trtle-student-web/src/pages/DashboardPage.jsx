@@ -7,6 +7,7 @@
 import React from "react";
 import { Box, Paper, Typography, Grid } from "@mui/material";
 import Layout from "../components/Layout";
+import CriarPomodoro from "../pages/CriarPomodoro";
 import {
   BarChart,
   Bar,
@@ -49,6 +50,9 @@ const Dashboard = () => {
 
         <Grid container spacing={3}>
           {/* Gráfico */}
+          <Grid item xs={12} md={8}>
+            <CriarPomodoro />
+          </Grid>
           <Grid item xs={12} md={8}>
             <Paper sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>

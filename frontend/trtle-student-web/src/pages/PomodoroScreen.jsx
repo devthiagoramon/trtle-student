@@ -1,18 +1,14 @@
-// Esta página deve exibir o cronômetro do Pomodoro
-// Deve haver botões de pausar e de interromper de sessão
-// Um botão deve permitir visualizar a lista de atividades associadas àquela sessão
-
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Button, Typography, Paper } from "@mui/material";
-import Layout from "../components/Layout";
+import { Box, Button, Typography, Paper, Grid } from "@mui/material";
 
 export default function PomodoroScreen({
   focusTime = 25 * 60,
   breakTime = 5 * 60,
   sets = 4,
+  onCancel,
 }) {
   const [timeLeft, setTimeLeft] = useState(focusTime);
-  const [isRunning, setIsRunning] = useState(true); // começa automático
+  const [isRunning, setIsRunning] = useState(true);
   const [mode, setMode] = useState("FOCO");
   const [currentSet, setCurrentSet] = useState(1);
   const timerRef = useRef(null);
@@ -23,7 +19,7 @@ export default function PomodoroScreen({
     return `${m}:${s}`;
   };
 
-  // Alterna modo quando timeLeft chega a 0 (FUNCIONA MENOS A PARTE DE (N/M))
+  // Alterna modo quando timeLeft chega a 0
   useEffect(() => {
     if (timeLeft > 0) return;
 
@@ -31,7 +27,7 @@ export default function PomodoroScreen({
       if (mode === "FOCO") {
         setMode("DESCANSO");
         setTimeLeft(breakTime);
-        return prevSet; // não incrementa durante descanso
+        return prevSet;
       } else {
         if (prevSet < sets) {
           setMode("FOCO");
@@ -46,7 +42,7 @@ export default function PomodoroScreen({
     });
   }, [timeLeft, mode, breakTime, focusTime, sets]);
 
-  // Timer countdown effect
+  // Timer countdown
   useEffect(() => {
     if (!isRunning) {
       clearInterval(timerRef.current);
@@ -71,122 +67,148 @@ export default function PomodoroScreen({
   };
 
   return (
-    <Layout>
-      <Box
+    <Box
+      sx={{
+        display: "grid",
+        justifyItems: "center",
+        alignItems: "start",
+        p: 4,
+      }}
+    >
+      <Paper
+        elevation={6}
         sx={{
-          bgcolor: "#5cab7d",
-          minHeight: "100vh",
-          display: "grid",
-          justifyItems: "center",
-          alignItems: "start",
+          width: "90%",
+          maxWidth: 450,
+          bgcolor: "#d9d9d9",
+          borderRadius: 4,
           p: 4,
         }}
       >
+        {/* Timer */}
         <Paper
-          elevation={6}
+          elevation={3}
           sx={{
-            width: "90%",
-            maxWidth: 1000,
-            height: 650,
-            bgcolor: "#d9d9d9",
-            borderRadius: 4,
-            p: 4,
-            position: "relative",
+            bgcolor: "#1c6d3e",
+            borderRadius: 3,
+            width: "100%",
+            height: 250,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            mb: 3,
           }}
         >
-          {/* Timer */}
-          <Paper
-            elevation={3}
-            sx={{
-              bgcolor: "#1c6d3e",
-              borderRadius: 3,
-              width: 500,
-              height: 350,
-              mx: "auto",
-              mt: 4,
-              p: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Typography
-              variant="h2"
-              color="white"
-              fontWeight="bold"
-              gutterBottom
-            >
-              {formatTime(timeLeft)}
-            </Typography>
-            <Typography
-              variant="h5"
-              color="white"
-              fontWeight="bold"
-              gutterBottom
-            >
-              {mode} ({currentSet}/{sets})
-            </Typography>
-
-            <Box sx={{ display: "flex", gap: 3, mt: 3 }}>
-              <Button
-                variant="contained"
-                sx={{ bgcolor: "#5cab7d", color: "#222", fontSize: "1.2rem" }}
-                onClick={handlePause}
-              >
-                {isRunning ? "Pause" : "Start"}
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ bgcolor: "#5cab7d", color: "#222", fontSize: "1.2rem" }}
-                onClick={handleReset}
-              >
-                Reset
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ bgcolor: "#5cab7d", color: "#222", fontSize: "1.2rem" }}
-                onClick={() =>
-                  alert("Aqui você pode abrir a lista de atividades")
-                }
-              >
-                Atividades
-              </Button>
-            </Box>
-          </Paper>
-
-          {/* Caixa inferior mostrando próximo modo */}
-          <Paper
-            elevation={3}
-            sx={{
-              bgcolor: "#1c6d3e",
-              borderRadius: 3,
-              width: 400,
-              height: 80,
-              mx: "auto",
-              mt: 6,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Typography
-              variant="h5"
-              color="white"
-              fontWeight="bold"
-              sx={{ textAlign: "center" }}
-            >
-              {mode === "FOCO"
-                ? `Próximo Descanso → ${Math.floor(breakTime / 60)}:${String(
-                    breakTime % 60
-                  ).padStart(2, "0")}`
-                : `Próximo FOCO → ${Math.floor(focusTime / 60)}:${String(
-                    focusTime % 60
-                  ).padStart(2, "0")}`}
-            </Typography>
-          </Paper>
+          <Typography variant="h3" color="white" fontWeight="bold">
+            {formatTime(timeLeft)}
+          </Typography>
+          <Typography variant="h6" color="white" fontWeight="bold" mt={1}>
+            {mode} ({currentSet}/{sets})
+          </Typography>
         </Paper>
-      </Box>
-    </Layout>
+
+        {/* Botões 2x2 */}
+        <Grid container spacing={2} mb={3}>
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              sx={{
+                bgcolor: "#5cab7d",
+                color: "#222",
+                width: "100%",
+                height: 60,
+                fontSize: "1.2rem",
+              }}
+              onClick={handlePause}
+            >
+              {isRunning ? "Pause" : "Start"}
+            </Button>
+          </Grid>
+
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              sx={{
+                bgcolor: "#5cab7d",
+                color: "#222",
+                width: "100%",
+                height: 60,
+                fontSize: "1.2rem",
+              }}
+              onClick={handleReset}
+            >
+              Reset
+            </Button>
+          </Grid>
+
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              sx={{
+                bgcolor: "#5cab7d",
+                color: "#222",
+                width: "100%",
+                height: 60,
+                fontSize: "1.2rem",
+              }}
+              onClick={() =>
+                alert("Aqui você pode abrir a lista de atividades")
+              }
+            >
+              Atividades
+            </Button>
+          </Grid>
+
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              sx={{
+                bgcolor: "#d9534f",
+                color: "#fff",
+                width: "100%",
+                height: 60,
+                fontSize: "1.2rem",
+              }}
+              onClick={() => {
+                clearInterval(timerRef.current);
+                if (onCancel) onCancel();
+              }}
+            >
+              Cancelar
+            </Button>
+          </Grid>
+        </Grid>
+
+        {/* Próximo modo */}
+        <Paper
+          elevation={3}
+          sx={{
+            bgcolor: "#1c6d3e",
+            borderRadius: 3,
+            width: "100%",
+            height: 60,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography
+            variant="body1"
+            color="white"
+            fontWeight="bold"
+            textAlign="center"
+          >
+            {mode === "FOCO"
+              ? `Próximo Descanso → ${Math.floor(breakTime / 60)}:${String(
+                  breakTime % 60
+                ).padStart(2, "0")}`
+              : `Próximo FOCO → ${Math.floor(focusTime / 60)}:${String(
+                  focusTime % 60
+                ).padStart(2, "0")}`}
+          </Typography>
+        </Paper>
+      </Paper>
+    </Box>
   );
 }
