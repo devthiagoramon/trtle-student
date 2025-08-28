@@ -1,6 +1,6 @@
 # TrtleStudy
 
-##Desenvolvedores:
+## Desenvolvedores:
 - Emanuel Ami Da Silva Hernandez - emanuel-ami / EmanuelAmi-UEA
 - Ian Garrido Reis - IRGarrido
 - Rebecca Esmirna Ribeiro dos Reis - devthiagoramon
